@@ -196,8 +196,6 @@ CREATE TABLE `users` (
 
 -- Kullanıcılara admin yetki alanı ekleme
 ALTER TABLE `users` ADD COLUMN `is_admin` TINYINT(1) NOT NULL DEFAULT 0;
-
--- Test için Ahmet Yılmaz (ahmet@gmail.com) kullanıcısını admin yapalım
 UPDATE `users` SET `is_admin` = 1 WHERE `email` = 'yavuztahatulumbaci25@gmail.com';
 
 
