@@ -87,7 +87,16 @@ require_once "auth.php";
                                 👤 <?php echo htmlspecialchars($_SESSION['user_name']); ?>
                             </a>
                             <hr style="border-color: rgba(255,255,255,0.1); margin: 8px 0;">
-                            <a href="logout.php" style="color: #ef4444; font-weight:500">Çıkış Yap</a>
+
+                            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+                                <a href="admin.php" style="color: #60a5fa; font-weight:500;">
+                                    <i class="fa-solid fa-screwdriver-wrench"></i> Admin Paneli
+                                </a>
+                            <?php endif; ?>
+
+                            <a href="logout.php" style="color: #ef4444; font-weight:500;">
+                                <i class="fa-solid fa-sign-out-alt"></i> Çıkış Yap
+                            </a>
                         <?php else: ?>
                             <a href="#" onclick="openModal('loginModal')">Giriş Yap</a>
                             <a href="#" onclick="openModal('registerModal')">Kayıt Ol</a>
