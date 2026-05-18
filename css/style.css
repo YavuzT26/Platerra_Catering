@@ -75,37 +75,54 @@ header {
 
 /* DROPDOWN */
 
+/* ========================= */
+/* DROPDOWN & KULLANICI MENÜSÜ */
+/* ========================= */
+
 .dropdown {
     position: relative;
 }
 
 .dropdown-menu {
     display: none;
-
     position: absolute;
-    top: 40px;
+    top: 45px;
     right: 0;
-
-    background: white;
-
-    min-width: 250px;
-
-    border-radius: 16px;
-
-    padding: 15px;
-
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    background: #111827;
+    /* Modal ve sepet ile uyumlu koyu arka plan */
+    min-width: 260px;
+    border-radius: 20px;
+    /* Daha modern yuvarlak hatlar */
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Şık, ince bir çerçeve */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    /* Derinlik katan gölge */
+    z-index: 1000;
+    animation: fadeUp 0.3s ease;
+    /* Açılırken yumuşak geliş */
 }
 
 .dropdown-menu a {
     display: block;
-    margin: 10px 0;
-    color: black;
+    margin: 5px 0;
+    padding: 12px 15px;
+    color: #d1d5db;
+    /* Açık gri metin */
     text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: 0.3s;
 }
 
 .dropdown-menu a:hover {
+    background: rgba(214, 185, 140, 0.1);
+    /* Üzerine gelince soft altın rengi arkaplan */
     color: #d6b98c;
+    /* Altın rengi metin */
+    transform: translateX(5px);
+    /* Hafif sağa kayma efekti */
 }
 
 /* HERO */
@@ -273,37 +290,100 @@ section {
 
 /* CART */
 
+/* ========================= */
+/* SEPET (CART) DETAYLARI */
+/* ========================= */
+
+#empty-cart {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
 #cart-items {
     list-style: none;
     margin-top: 10px;
+    max-height: 300px;
+    /* Çok ürün eklenirse menü taşmasın */
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Sepet scrollbar tasarımı */
+#cart-items::-webkit-scrollbar {
+    width: 6px;
+}
+
+#cart-items::-webkit-scrollbar-thumb {
+    background: rgba(214, 185, 140, 0.3);
+    border-radius: 10px;
 }
 
 .cart-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    background: #111827;
-
-    color: white;
-
-    padding: 10px;
-
-    border-radius: 10px;
-
+    background: rgba(255, 255, 255, 0.04);
+    /* Transparan, şık bir arkaplan */
+    color: #f3f4f6;
+    padding: 12px 15px;
+    border-radius: 12px;
     margin-bottom: 10px;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    transition: 0.3s;
 }
 
+.cart-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(214, 185, 140, 0.3);
+}
+
+/* Çıkarma Butonu (X) */
 .cart-item button {
-    background: red;
-    border: none;
-    color: white;
-
-    padding: 6px 10px;
-
+    background: rgba(239, 68, 68, 0.15);
+    /* Soft kırmızı arkaplan */
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+    width: 28px;
+    height: 28px;
     border-radius: 8px;
-
     cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.cart-item button:hover {
+    background: #ef4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Sepete Git Butonu */
+#cartMenu button:not(.cart-item button) {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    background: #d6b98c;
+    color: #020617;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(214, 185, 140, 0.2);
+}
+
+#cartMenu button:not(.cart-item button):hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
 /* ABOUT */
