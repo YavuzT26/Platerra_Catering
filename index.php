@@ -193,9 +193,18 @@ require_once "auth.php";
                     </button>
                 </div>
             </div>
-
         </section>
-    <?php endif ?>
+    <?php else: ?>
+        <section class="premium-menu" id="gununMenusuLocked">
+            <div class="premium-overlay"></div>
+            <div class="locked-menu-content">
+                <i class="fa-solid fa-lock locked-icon"></i>
+                <h2>Günün Özel Menüsü</h2>
+                <p>Şefimizin bugün için hazırladığı özel menüyü görüntülemek ve sipariş vermek için lütfen giriş yapın.</p>
+                <button class="btn" onclick="openModal('loginModal')">Giriş Yap / Kayıt Ol</button>
+            </div>
+        </section>
+    <?php endif; ?>
 
     <section class="menu-section" id="menuSection">
 
