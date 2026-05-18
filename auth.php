@@ -45,7 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
         $email = trim($_POST['email']);
         $password = $_POST['password'];
 
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email=:email");
+        $sql = "SELECT * FROM users WHERE email=:email";
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ":email" => $email
         ]);
@@ -55,7 +56,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type'])) {
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['user_name'] = $user['full_name'];
+            $_SESSION['is_admin'] = $user['is_admin']; // Admin durumunu oturuma kaydediyoruz
             $_SESSION['basari_mesaji'] = "Hoşgeldin " . $user['full_name'];
+
+            // Giriş yapanın admin olması durumunda direkt olara admin paneline yönlendiriliyor
+            if ($user['is_admin'] == 1) {
+                header("Location: admin.php");
+                exit();
+            }
         } else {
             $_SESSION['hata_mesaji'] = "Hatalı e-posta veya şifre girdiniz!";
         }
