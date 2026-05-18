@@ -11,7 +11,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
 
 require_once 'connect.php';
 
-// --- BACKEND İŞLEMLERİ (CRUD) ---
+// --- BACKEND İŞLEMLERİ (CRUD & TRANSACTION) ---
 
 // 1. Yemek Ekleme İşlemi
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'add_meal') {
@@ -38,6 +38,35 @@ if (isset($_GET['delete_id'])) {
     $stmt->execute([':id' => $delete_id]);
     header("Location: admin.php?success=Yemek başarıyla silindi");
     exit();
+}
+
+// YENİ - 3. Müşteri ve İlişkili Siparişlerini Silme İşlemi (Transaction)
+if (isset($_GET['delete_customer_id'])) {
+    $customer_id = intval($_GET['delete_customer_id']);
+
+    try {
+        // Güvenli silme zinciri için işlemi başlatıyoruz
+        $pdo->beginTransaction();
+
+        // Adım A: Müşterinin önceden verdiği siparişleri orders tablosundan temizle
+        $deleteOrdersStmt = $pdo->prepare("DELETE FROM orders WHERE user_id = :id");
+        $deleteOrdersStmt->execute([':id' => $customer_id]);
+
+        // Adım B: Müşterinin hesabını users tablosundan temizle (Admin hesaplarının yanlışlıkla silinmesini önler)
+        $deleteUserStmt = $pdo->prepare("DELETE FROM users WHERE user_id = :id AND is_admin = 0");
+        $deleteUserStmt->execute([':id' => $customer_id]);
+
+        // İki işlem de sorunsuz bittiyse veritabanına kalıcı olarak işle
+        $pdo->commit();
+
+        header("Location: admin.php?success=Müşteri kaydı ve ilişkili tüm sipariş geçmişi başarıyla temizlendi.");
+        exit();
+    } catch (\PDOException $e) {
+        // Herhangi bir adımda hata oluşursa yapılan tüm değişiklikleri geri al (Veritabanı sağlığı için)
+        $pdo->rollBack();
+        header("Location: admin.php?error=Müşteri silinirken sistemsel bir hata oluştu: " . urlencode($e->getMessage()));
+        exit();
+    }
 }
 
 // --- İSTATİSTİK VERİLERİNİ ÇEKME (Dashboard) ---
@@ -101,7 +130,6 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             text-decoration: none;
         }
 
-        /* Nav Buton Grubu Ayarları */
         .nav-right {
             display: flex;
             gap: 15px;
@@ -119,7 +147,6 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             gap: 8px;
         }
 
-        /* Müşteri Ekranı Buton Stili (Altın Sarısı Transparan) */
         .btn-view-site {
             color: #d6b98c;
             background: rgba(214, 185, 140, 0.1);
@@ -131,7 +158,6 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             color: #020617;
         }
 
-        /* Güvenli Çıkış Buton Stili (Kırmızı Transparan) */
         .btn-logout {
             color: #ef4444;
             background: rgba(239, 68, 68, 0.1);
@@ -162,7 +188,7 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             padding-bottom: 15px;
         }
 
-        /* Bildirim Mesajı */
+        /* Bildirim Mesajları */
         .alert {
             background: rgba(214, 185, 140, 0.15);
             border: 1px solid #d6b98c;
@@ -171,6 +197,12 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             border-radius: 12px;
             margin-bottom: 30px;
             font-weight: 500;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
         }
 
         /* İstatistik Kartları */
@@ -242,7 +274,7 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             grid-template-columns: 1fr 2fr;
         }
 
-        @media(max-width: 1000px) {
+        @media(max-width: 1100px) {
 
             .management-grid,
             .two-column-grid {
@@ -289,7 +321,6 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             background: rgba(255, 255, 255, 0.08);
         }
 
-        /* Kategori Seçim Alanı Koyu Tema Uyumu */
         .form-group select option {
             background: #020617;
             color: white;
@@ -359,11 +390,34 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
             font-weight: 600;
             transition: 0.3s;
             border: 1px solid rgba(239, 68, 68, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .btn-delete:hover {
             background: #ef4444;
             color: white;
+        }
+
+        /* Arama Kutusu */
+        .search-container {
+            position: relative;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d6b98c;
+            font-size: 16px;
+        }
+
+        .search-container input {
+            padding-left: 45px;
         }
     </style>
 </head>
@@ -384,6 +438,12 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
         <?php if (isset($_GET['success'])): ?>
             <div class="alert">
                 <i class="fa-solid fa-circle-check"></i> <?php echo htmlspecialchars($_GET['success']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error'])): ?>
+            <div class="alert alert-error">
+                <i class="fa-solid fa-triangle-exclamation"></i> <?php echo htmlspecialchars($_GET['error']); ?>
             </div>
         <?php endif; ?>
 
@@ -462,9 +522,10 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
                 <table style="margin-top:20px;">
                     <thead>
                         <tr>
-                            <th>Müşteri ID</th>
+                            <th>ID</th>
                             <th>Ad Soyad</th>
                             <th>E-posta Adresi</th>
+                            <th>İşlem</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -474,11 +535,16 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
                                     <td style="color:#9ca3af;">#<?php echo $cust['user_id']; ?></td>
                                     <td style="font-weight: 500; color:white;"><?php echo htmlspecialchars($cust['full_name']); ?></td>
                                     <td style="color: #d1d5db;"><?php echo htmlspecialchars($cust['email']); ?></td>
+                                    <td>
+                                        <a href="admin.php?delete_customer_id=<?php echo $cust['user_id']; ?>" class="btn-delete" onclick="return confirm('Bu müşteriyi silmek istediğinize emin misiniz? Müşteriye ait TÜM SİPARİŞ GEÇMİŞİ de kalıcı olarak silinecektir!');">
+                                            <i class="fa-solid fa-user-minus"></i> Kaldır
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="3" style="text-align:center; color:#9ca3af; padding: 25px;">Sistemde kayıtlı müşteri bulunmuyor.</td>
+                                <td colspan="4" style="text-align:center; color:#9ca3af; padding: 25px;">Sistemde kayıtlı müşteri bulunmuyor.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -520,7 +586,13 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
 
             <div class="table-wrapper">
                 <h2>Menü İçerik Listesi</h2>
-                <table style="margin-top:20px;">
+
+                <div class="search-container form-group">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="menuSearch" onkeyup="filterMeals()" placeholder="Yemek adı veya kategoriye göre hızlı ara...">
+                </div>
+
+                <table style="margin-top:10px;" id="mealsTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -550,6 +622,31 @@ $customers = $pdo->query("SELECT * FROM users WHERE is_admin = 0 ORDER BY user_i
         </div>
 
     </div>
+
+    <script>
+        function filterMeals() {
+            const input = document.getElementById('menuSearch');
+            const filter = input.value.toLowerCase().trim();
+            const table = document.getElementById('mealsTable');
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                const tdMealName = tr[i].getElementsByTagName('td')[1];
+                const tdCategory = tr[i].getElementsByTagName('td')[2];
+
+                if (tdMealName && tdCategory) {
+                    const mealText = tdMealName.textContent || tdMealName.innerText;
+                    const catText = tdCategory.textContent || tdCategory.innerText;
+
+                    if (mealText.toLowerCase().indexOf(filter) > -1 || catText.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>
