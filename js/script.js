@@ -71,14 +71,21 @@ window.onclick = function (event) {
 
 function toggleDropdown(id) {
 
-    const menu = document.getElementById(id);
+    const targetMenu = document.getElementById(id);
 
-    if (menu.style.display === "block") {
-        menu.style.display = "none";
+    // Diğer tüm dropdown menülerini bul ve kapat (Aynı anda açılmalarını engeller)
+    const allDropdowns = document.getElementsByClassName("dropdown-menu");
+    for (let i = 0; i < allDropdowns.length; i++) {
+        if (allDropdowns[i].id !== id) {
+            allDropdowns[i].style.display = "none";
+        }
     }
 
-    else {
-        menu.style.display = "block";
+    // Hedef menünün durumunu değiştir
+    if (targetMenu.style.display === "block") {
+        targetMenu.style.display = "none";
+    } else {
+        targetMenu.style.display = "block";
     }
 }
 
@@ -95,9 +102,9 @@ function toggleMenu(card) {
 
 let cart = [];
 
-function addToCart(product) {
+function addToCart(name, price) {
 
-    cart.push(product);
+    cart.push({ name: name, price: parseFloat(price) });
 
     updateCart();
 }
@@ -108,6 +115,11 @@ function removeFromCart(index) {
 
     updateCart();
 }
+function addDailyMenu() {
+    cart.push({ name: "Şefin Günlük Menüsü", price: 450.0 });
+    updateCart();
+    alert("Şefin günlük menüsü sepete eklendi!");
+}
 
 function updateCart() {
 
@@ -117,36 +129,89 @@ function updateCart() {
 
     const cartCount = document.getElementById("cart-count");
 
+    const cartTotalDisplay = document.getElementById("cart-total-display") // Toplam div'i;
+
     cartItems.innerHTML = "";
 
     cartCount.innerText = cart.length;
 
+    let total = 0;
+
     if (cart.length === 0) {
 
         emptyText.style.display = "block";
+        if (cartTotalDisplay) cartTotalDisplay.style.display = "none";
     }
 
     else {
 
         emptyText.style.display = "none";
+        if (cartTotalDisplay) cartTotalDisplay.style.display = "block";
 
         cart.forEach((item, index) => {
-
+            total += item.price;
             cartItems.innerHTML += `
             
             <li class="cart-item">
-
-                ${item}
-
-                <button onclick="removeFromCart(${index})">
-                    X
-                </button>
-
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <span style="font-weight:500;">${item.name}</span>
+                    <span style="font-size:12px; color:#d6b98c;">${item.price} ₺</span>
+                </div>
+                <button onclick="removeFromCart(${index})">X</button>
             </li>
             
             `;
         });
+        if (cartTotalDisplay) cartTotalDisplay.innerText = `Toplam: ${total} ₺`;
     }
+}
+//    Sipariş Tamamla
+//    Modern Fetch API ile async await kullanıldı
+
+async function completeOrder() {
+    if (cart.length === 0) {
+        alert('Sepetiniz boş!');
+        return;
+    }
+
+    try {
+        // Fiyatları değil isimleri gönderiyoruz ki kullanıcı değişim yapamasın
+        const itemsToSend = cart.map(item => item.name);
+
+        const response = await fetch('checkout.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cart: itemsToSend })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP hatası! Durum: ${response.status}`);
+        }
+
+
+        const data = await response.json();
+
+
+        if (data.status === 'success') {
+            alert(data.message);
+            cart = [];
+            updateCart();
+            document.getElementById('cartMenu').style.display = 'none';
+        } else {
+            alert(data.message);
+            if (data.redirect === 'login') {
+                openModal('loginModal');
+            }
+        }
+
+    } catch (error) {
+        console.error('Sipariş hatası:', error);
+        alert("Sipariş işlenirken bir sunucu hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyiniz!");
+    }
+
+
 }
 // kullanıcı giriş sistemi
 
@@ -196,49 +261,3 @@ function scrollToMenu() {
 }
 
 
-//    Sipariş Tamamla
-//    Modern Fetch API ile async await kullanıldı
-
-async function completeOrder() {
-    if (cart.length === 0) {
-        alert('Sepetiniz boş!');
-        return;
-    }
-
-    try {
-
-        const response = await fetch('checkout.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ cart: cart })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP hatası! Durum: ${response.status}`);
-        }
-
-
-        const data = await response.json();
-
-
-        if (data.status === 'success') {
-            alert(data.message);
-            cart = [];
-            updateCart();
-            document.getElementById('cartMenu').style.display = 'none';
-        } else {
-            alert(data.message);
-            if (data.redirect === 'login') {
-                openModal('loginModal');
-            }
-        }
-
-    } catch (error) {
-        console.error('Sipariş hatası:', error);
-        alert("Sipariş işlenirken bir sunucu hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyiniz!");
-    }
-
-
-}
