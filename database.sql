@@ -73,7 +73,7 @@ INSERT INTO `meals` (`category_id`, `meal_name`, `price`) VALUES
 -- Kategori 6: İçecekler
 (6, 'Reyhan Şerbeti', 65.00),
 (6, 'Taze Portakal Suyu', 75.00),
-(6, 'Naneli Limonata', 65.00),
+(6, 'Naneli Limonata', 65.00);
 UNLOCK TABLES;
 
 
