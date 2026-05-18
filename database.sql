@@ -193,6 +193,14 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+-- Kullanıcılara admin yetki alanı ekleme
+ALTER TABLE `users` ADD COLUMN `is_admin` TINYINT(1) NOT NULL DEFAULT 0;
+
+-- Test için Ahmet Yılmaz (ahmet@gmail.com) kullanıcısını admin yapalım
+UPDATE `users` SET `is_admin` = 1 WHERE `email` = 'ahmet@gmail.com';
+
+
 --
 -- Dumping data for table `users`
 --
