@@ -41,7 +41,7 @@ require_once "auth.php";
             <div class="nav-right">
 
                 <a href="#">Anasayfa</a>
-                <a href="#gununMenusu">Menü</a>
+                <a href="#menuSection">Menü</a>
                 <a href="#about">Hakkımızda</a>
                 <a href="#contact">İletişim</a>
 
