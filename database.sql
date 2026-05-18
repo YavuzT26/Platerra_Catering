@@ -107,6 +107,44 @@ CREATE TABLE `meals` (
 LOCK TABLES `meals` WRITE;
 /*!40000 ALTER TABLE `meals` DISABLE KEYS */;
 INSERT INTO `meals` VALUES (1,1,'Mercimek Çorbası',120.00),(2,1,'Ezogelin Çorbası',125.00),(3,1,'Domates Çorbası',130.00),(4,1,'Tavuk Suyu Çorbası',140.00),(5,1,'Yayla Çorbası',120.00),(6,2,'Karnıyarık',250.00),(7,2,'Nohut Yemeği',200.00),(8,2,'Kabak Dolması',230.00),(9,2,'Sebzeli Türlü',220.00),(10,2,'Ispanak Yemeği',210.00),(11,2,'Fırın Makarna',190.00),(12,2,'Pırasa Yemeği',200.00),(13,2,'Kuru Fasulye',210.00),(14,3,'Yaprak Sarma',180.00),(15,3,'Barbunya',170.00),(16,3,'Taze Fasulye',165.00),(17,3,'Enginar',190.00),(18,4,'Haydari',90.00),(19,4,'Patlıcan Salatası',100.00),(20,4,'Rus Salatası',95.00),(21,4,'Yoğurtlu Semizotu',90.00),(22,5,'Sütlaç',110.00),(23,5,'Kemalpaşa Tatlısı',120.00),(24,5,'Kabak Tatlısı',115.00),(25,5,'Fırın Sütlaç',125.00),(26,5,'Aşure',130.00),(27,5,'Muhallebi',100.00),(28,5,'Kazandibi',135.00),(29,5,'İrmik Helvası',120.00),(30,6,'Kola',50.00),(31,6,'Ayran',40.00),(32,6,'Limonata',60.00),(33,6,'Soğuk Çay',55.00),(34,6,'Meyve Suyu',65.00);
+/* Yeni Eklenen Yemekler*/
+INSERT INTO `meals` (`category_id`, `meal_name`, `price`) VALUES
+-- Kategori 1: Çorbalar
+(1, 'Kremalı Mantar Çorbası', 135.00),
+(1, 'Düğün Çorbası', 145.00),
+(1, 'Balkabağı Çorbası', 130.00),
+
+-- Kategori 2: Ana Yemekler (Premium Dokunuşlar)
+(2, 'Hünkar Beğendi', 320.00),
+(2, 'Fırında Kuzu İncik', 380.00),
+(2, 'Izgara Somon', 350.00),
+(2, 'Piliç Topkapı', 260.00),
+(2, 'Dana Rosto', 310.00),
+(2, 'Et Çökertme Kebabı', 330.00),
+
+-- Kategori 3: Zeytinyağlılar
+(3, 'İmambayıldı', 185.00),
+(3, 'Kereviz', 175.00),
+(3, 'Bamya', 195.00),
+
+-- Kategori 4: Mezeler
+(4, 'Humus', 95.00),
+(4, 'Muhammara (Cevizli Biber)', 105.00),
+(4, 'Fava', 90.00),
+(4, 'Girit Ezmesi', 110.00),
+(4, 'Babagannuş', 100.00),
+
+-- Kategori 5: Tatlılar
+(5, 'Tiramisu', 150.00),
+(5, 'Profiterol', 140.00),
+(5, 'Trileçe', 130.00),
+(5, 'Ayva Tatlısı', 125.00),
+(5, 'Creme Brulee', 160.00),
+
+-- Kategori 6: İçecekler
+(6, 'Reyhan Şerbeti', 65.00),
+(6, 'Taze Portakal Suyu', 75.00),
+(6, 'Naneli Limonata', 65.00),
 /*!40000 ALTER TABLE `meals` ENABLE KEYS */;
 UNLOCK TABLES;
 
