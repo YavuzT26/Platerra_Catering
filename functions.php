@@ -4,14 +4,19 @@ include "connect.php";
 function menuyuGetir($category_id)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT meal_name FROM meals WHERE category_id =:category_id");
+    $sql = "SELECT meal_name , price FROM meals WHERE category_id=:category_id";
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([":category_id" => $category_id]);
 
     $yemekAdi = $stmt->fetchAll();
 
     foreach ($yemekAdi as $yAdi) {
         $yemekAdi = htmlspecialchars($yAdi['meal_name']);
-        echo "<li onclick=\"addToCart('$yemekAdi')\">$yemekAdi</li>\n";
+        $fiyat = $yAdi['price'];
+        echo "<li onclick=\"addToCart('$yemekAdi', $fiyat)\" style=\"display:flex; justify-content:space-between; align-items:center;\">
+                <span>$yemekAdi</span>
+                <span style=\"font-size:14px; opacity:0.8;\">" . round($fiyat) . " ₺</span>
+              </li>\n";
     }
 };
 
