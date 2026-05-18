@@ -135,6 +135,8 @@ function updateCart() {
 
     const cartTotalDisplay = document.getElementById("cart-total-display") // Toplam div'i;
 
+    const orderButton = document.querySelector("#cartMenu button:not(.cart-item button)");
+
     cartItems.innerHTML = "";
 
     cartCount.innerText = cart.length;
@@ -145,12 +147,14 @@ function updateCart() {
 
         emptyText.style.display = "block";
         if (cartTotalDisplay) cartTotalDisplay.style.display = "none";
+        if (orderButton) orderButton.style.display = "none";
     }
 
     else {
 
         emptyText.style.display = "none";
         if (cartTotalDisplay) cartTotalDisplay.style.display = "block";
+        if (orderButton) orderButton.style.display = "block";
 
         cart.forEach((item, index) => {
             total += item.price;
@@ -263,5 +267,6 @@ function scrollToMenu() {
         });
 
 }
+updateCart();
 
 
