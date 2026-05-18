@@ -67,3 +67,27 @@ function dailyMenu($tarih)
         echo "</div>\n";
     }
 };
+
+function getDailyMenuPrice($tarih)
+{
+    global $pdo;
+
+    $sql = "SELECT 
+            (COALESCE(s.price,0)+COALESCE(mc.price,0)+COALESCE(oo.price,0)
+            +COALESCE(a.price,0)+COALESCE(des.price,0)+COALESCE(dr.price,0)) AS total_price
+          FROM dailymenu dm
+          LEFT JOIN meals s ON dm.soup_id=s.meal_id
+          LEFT JOIN meals mc ON dm.main_course_id=mc.meal_id
+          LEFT JOIN meals oo ON dm.olive_oil_id=oo.meal_id
+          LEFT JOIN meals a ON dm.appetizer_id=a.meal_id
+          LEFT JOIN meals des ON dm.dessert_id=des.meal_id
+          LEFT JOIN meals dr ON dm.drink_id=dr.meal_id
+          WHERE dm.menu_date=:bugun LIMIT 1";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':bugun' => $tarih
+    ]);
+    $result = $stmt->fetch();
+    return $result ? (float)$result['total_price'] : 0;
+}
