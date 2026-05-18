@@ -119,8 +119,8 @@ function removeFromCart(index) {
 
     updateCart();
 }
-function addDailyMenu() {
-    cart.push({ name: "Şefin Günlük Menüsü", price: 450.0 });
+function addDailyMenu(dynamicPrice) {
+    cart.push({ name: "Şefin Günlük Menüsü", price: parseFloat(dynamicPrice) });
     updateCart();
     alert("Şefin günlük menüsü sepete eklendi!");
 }
@@ -244,14 +244,7 @@ function logoutUser() {
         .getElementById("gununMenusu")
         .style.display = "none";
 }
-function addDailyMenu() {
 
-    cart.push("👨‍🍳 Şefin Günlük Menüsü");
-
-    updateCart();
-
-    alert("Şefin günlük menüsü sepete eklendi!");
-}
 /*function scrollToMenu(){
 
     document.getElementById("menu").scrollIntoView({
