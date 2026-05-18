@@ -580,13 +580,63 @@ footer p {
 
 /* MENÜ AÇILMA */
 
+/* ========================= */
+/* MENÜ AÇILMA VE 2 SÜTUN YAPISI */
+/* ========================= */
+
 .sub-menu {
     display: none;
-    margin-top: 20px;
+    margin-top: 25px;
+    padding: 0 10px;
 }
 
 .sub-menu.active {
-    display: block;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Menüyü 2 eşit sütuna böler */
+    column-gap: 20px;
+    /* Sütunlar arası yatay boşluk */
+    row-gap: 15px;
+    /* Satırlar arası dikey boşluk */
+}
+
+/* TIKLANABİLİR KART */
+.clickable {
+    cursor: pointer;
+}
+
+/* ÜRÜNLER */
+.sub-menu li {
+    list-style: none;
+    margin: 0;
+    font-size: 19px;
+    /* İki sütun olacağı için çok büyük kalmasın diye hafif küçültüldü */
+    transition: 0.3s;
+    text-align: center;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    /* Çok hafif bir arka plan ile buton hissi */
+    border-radius: 10px;
+    border: 1px solid transparent;
+}
+
+.sub-menu li:hover {
+    color: #d6b98c;
+    /* Arka plan rengini çok daha şeffaf (0.05) yaptık */
+    background: rgba(214, 185, 140, 0.05);
+    /* Çerçeve rengini de daha soft yaptık */
+    border-color: rgba(214, 185, 140, 0.15);
+    /* Ürünün genel şeffaflığını artırdık (1 tam görünürlük, 0 görünmezdir) */
+    opacity: 0.7;
+    transform: scale(1.02);
+}
+
+/* MOBİL UYUM (Telefonlarda tekrar tek sütun olması için) */
+@media(max-width: 600px) {
+    .sub-menu.active {
+        grid-template-columns: 1fr;
+        /* Ekrana sığması için 1 sütuna düşürür */
+    }
 }
 
 /* TIKLANABİLİR KART */
