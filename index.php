@@ -198,9 +198,15 @@ require_once "auth.php";
 
                 </div>
                 <div class="premium-buy">
-                    <button class="premium-buy-btn" onclick="addDailyMenu()">
-                        Günün Menüsünü Satın Al
-                    </button>
+                    <?php
+                    $daily_price = getDailyMenuPrice(date('Y-m-d'));
+
+                    if ($daily_price > 0):
+                    ?>
+                        <button class="premium-buy-btn" onclick="addDailyMenu(<?php echo $daily_price; ?>)">
+                            Günün Menüsünü Satın Al <?php echo $daily_price; ?> ₺
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </section>
