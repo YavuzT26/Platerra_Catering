@@ -66,10 +66,10 @@ require_once "auth.php";
 
                         <ul id="cart-items"></ul>
                         <div id="cart-total-display" style="display: none; padding: 12px 0; color: #d6b98c; font-weight: 700; text-align: right; font-size: 17px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px;">
-                            Toplam: 0 ₺
+                            T oplam: 0 ₺
                         </div>
 
-                        <button onclick="completeOrder()">Siparişi Tamamla</button>
+                        <button onclick="completeOrder()" style="display:none;">Siparişi Tamamla</button>
 
                     </div>
 
