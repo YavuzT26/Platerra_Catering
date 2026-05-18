@@ -10,6 +10,10 @@ window.addEventListener('click', function (event) {
         event.target.style.display = "none";
     }
 
+    if (event.target.closest('#cart-items') || event.target.closest('.cart-item button')) {
+        return;
+    }
+
     // Tıklanan yer açılır menü (dropdown) veya ikonu DEĞİLSE menüleri gizle
     if (!event.target.closest('.dropdown')) {
         let dropdowns = document.getElementsByClassName("dropdown-menu");
