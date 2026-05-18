@@ -27,8 +27,27 @@ $total_price = 0;
 
 // Veri tabanından çekme işlemi SQL Injection için önlem aldığımz yer
 foreach ($cart as $item) {
-    if ($item === "👨‍🍳 Şefin Günlük Menüsü") {
-        $total_price += 450.00;
+    if ($item === "Şefin Günlük Menüsü") {
+
+        // Güvenlik: JS'den gelen fiyata güvenmiyoruz, veritabanından tekrar hesaplıyoruz
+        $sql_daily = "SELECT 
+                        (COALESCE(s.price, 0) + COALESCE(mc.price, 0) + COALESCE(oo.price, 0) + 
+                         COALESCE(a.price, 0) + COALESCE(des.price, 0) + COALESCE(dr.price, 0)) AS total_price
+                    FROM dailymenu dm
+                    LEFT JOIN meals s ON dm.soup_id = s.meal_id
+                    LEFT JOIN meals mc ON dm.main_course_id = mc.meal_id
+                    LEFT JOIN meals oo ON dm.olive_oil_id = oo.meal_id
+                    LEFT JOIN meals a ON dm.appetizer_id = a.meal_id
+                    LEFT JOIN meals des ON dm.dessert_id = des.meal_id
+                    LEFT JOIN meals dr ON dm.drink_id = dr.meal_id
+                    WHERE dm.menu_date = CURDATE() LIMIT 1";
+
+        $stmt_daily = $pdo->query($sql_daily);
+        $daily_price = $stmt_daily->fetchColumn();
+
+        if ($daily_price) {
+            $total_price += (float)$daily_price;
+        }
     } else {
         $sql = 'SELECT price FROM meals WHERE meal_name=:name';
         $stmt = $pdo->prepare($sql);
