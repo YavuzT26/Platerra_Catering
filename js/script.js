@@ -194,3 +194,51 @@ function scrollToMenu() {
         });
 
 }
+
+
+//    Sipariş Tamamla
+//    Modern Fetch API ile async await kullanıldı
+
+async function completeOrder() {
+    if (cart.length === 0) {
+        alert('Sepetiniz boş!');
+        return;
+    }
+
+    try {
+
+        const response = await fetch('checkout.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cart: cart })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP hatası! Durum: ${response.status}`);
+        }
+
+
+        const data = await response.json();
+
+
+        if (data.status === 'success') {
+            alert(data.message);
+            cart = [];
+            updateCart();
+            document.getElementById('cartMenu').style.display = 'none';
+        } else {
+            alert(data.message);
+            if (data.redirect === 'login') {
+                openModal('loginModal');
+            }
+        }
+
+    } catch (error) {
+        console.error('Sipariş hatası:', error);
+        alert("Sipariş işlenirken bir sunucu hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyiniz!");
+    }
+
+
+}
