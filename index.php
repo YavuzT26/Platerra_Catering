@@ -66,9 +66,7 @@ require_once "auth.php";
 
                         <ul id="cart-items"></ul>
 
-                        <button>
-                            Sepete Git
-                        </button>
+                        <button onclick="completeOrder()">Siparişi Tamamla</button>
 
                     </div>
 
