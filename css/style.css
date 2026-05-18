@@ -578,26 +578,60 @@ footer p {
 
 }
 
-/* MENÜ AÇILMA */
+
+
+
+/* MENÜ AÇILMA 
+   2 SÜTUN YAPISI 
+   Daha Sıralı Hale Geldi
+*/
+
 
 /* ========================= */
-/* MENÜ AÇILMA VE 2 SÜTUN YAPISI */
+/* MENÜ AÇILMA VE YUMUŞAK GEÇİŞ (TRANSITION) YAPISI */
 /* ========================= */
 
 .sub-menu {
-    display: none;
-    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Menüyü yine 2 eşit sütuna böler */
+    column-gap: 20px;
+    /* Sütunlar arası yatay boşluk */
+    row-gap: 0;
+    /* Kapalıyken dikey boşluk sıfır (akıcılık için önemli) */
     padding: 0 10px;
+
+    /* Yumuşatma ve Gizleme Ayarları */
+    max-height: 0;
+    /* Kapalıyken yükseklik tamamen sıfır */
+    opacity: 0;
+    /* Kapalıyken tamamen şeffaf (görünmez) */
+    overflow: hidden;
+    /* İçindeki yemeklerin kapalıyken taşmasını engeller */
+    margin-top: 0;
+    /* Kapalıyken kart içindeki üst boşluğu sıfırlar */
+    transform: translateY(-20px);
+    /* Açılırken yukarıdan aşağı süzülme efekti için */
+
+    /* Tüm bu efektlerin ne kadar sürede ve nasıl bir kavisle (akışla) açılacağı */
+    transition: max-height 0.5s cubic-bezier(0.3, 0, 0.2, 1),
+        opacity 0.4s ease-in-out,
+        margin-top 0.5s ease,
+        row-gap 0.5s ease,
+        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sub-menu.active {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* Menüyü 2 eşit sütuna böler */
-    column-gap: 20px;
-    /* Sütunlar arası yatay boşluk */
+    max-height: 600px;
+    /* Menüdeki elemanların rahatça sığabileceği güvenli bir üst sınır */
+    opacity: 1;
+    /* Tam görünür hale gelir */
+    margin-top: 25px;
+    /* Açıldığında tasarımın nefes alması için gereken boşluk */
     row-gap: 15px;
-    /* Satırlar arası dikey boşluk */
+    /* Yemek kutularının arasındaki dikey boşluk açılır */
+    transform: translateY(0);
+    /* Süzülme efektini orijinal konumunda tamamlar */
 }
 
 /* TIKLANABİLİR KART */
