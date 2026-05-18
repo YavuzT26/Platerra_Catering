@@ -1060,3 +1060,50 @@ footer p {
     margin-top: 30px;
     font-size: 16px;
 }
+
+
+/* ========================= */
+/* KİLİTLİ MENÜ EKRANI */
+/* ========================= */
+.locked-menu-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 80px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.locked-icon {
+    font-size: 60px;
+    color: #d6b98c;
+    /* Altın sarısı kilit */
+    margin-bottom: 25px;
+    filter: drop-shadow(0 0 15px rgba(214, 185, 140, 0.4));
+    /* Hafif bir parlama efekti */
+}
+
+.locked-menu-content h2 {
+    font-size: 48px;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 20px;
+}
+
+.locked-menu-content p {
+    color: #d1d5db;
+    font-size: 18px;
+    max-width: 600px;
+    line-height: 1.8;
+    margin-bottom: 35px;
+}
+
+/* Mobil cihazlar için başlık boyutunu küçültme */
+@media(max-width:700px) {
+    .locked-menu-content h2 {
+        font-size: 36px;
+    }
+}
