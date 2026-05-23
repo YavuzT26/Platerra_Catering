@@ -127,3 +127,18 @@ CREATE TABLE `orders` (
 -- Kullanıcılara admin yetki alanı ekleme
 ALTER TABLE `users` ADD COLUMN `is_admin` TINYINT(1) NOT NULL DEFAULT 0;
 
+-- Sipariş detayları için tablomuz
+CREATE TABLE IF NOT EXISTS `order_items` (
+  `item_id`   INT            NOT NULL AUTO_INCREMENT,
+  `order_id`  INT            NOT NULL,
+  `meal_id`   INT                NULL DEFAULT NULL,
+  `meal_name` VARCHAR(100)   NOT NULL,
+  `price`     DECIMAL(10,2)  NOT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `order_id` (`order_id`),
+  KEY `meal_id`  (`meal_id`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders`  (`order_id`) ON DELETE CASCADE,
+  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`meal_id`)  REFERENCES `meals`   (`meal_id`)  ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ 
+
