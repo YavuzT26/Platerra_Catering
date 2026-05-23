@@ -5,12 +5,21 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+/** 
+ * CSRF token üretimini eklemiş olduk,
+ *bin2hex(random_bytes(32)) methodu ile 64 karakterlik tahmin edilemez bir token oluşturduk
+ */
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
-// 2. HomeController dosyasını sisteme dahil ediyoruz
+
+// Controller dosyalarını sisteme dahil ettiğimiz kısım
 require_once 'controllers/HomeController.php';
 require_once 'controllers/AuthController.php';
 require_once 'controllers/OrderController.php';
 require_once 'controllers/AdminController.php';
+
 
 $route = 'home';
 if (isset($_GET['route'])) {
@@ -22,7 +31,7 @@ if (isset($_GET['route'])) {
 switch ($route) {
     case 'home':
         $controller = new HomeController();
-        $controller->index(); // HomeController içindeki index() metodunu tetikler
+        $controller->index();
         break;
 
     case 'register':
@@ -40,18 +49,15 @@ switch ($route) {
         $controller->logout();
         break;
     case 'checkout':
-        require_once 'controllers/OrderController.php';
         $controller = new OrderController();
         $controller->checkout();
         break;
 
     case 'admin':
-        require_once 'controllers/AdminController.php';
         $controller = new AdminController();
         $controller->index();
         break;
     case 'admin_action':
-        require_once 'controllers/AdminController.php';
         $controller = new AdminController();
         $controller->handleAction();
         break;
