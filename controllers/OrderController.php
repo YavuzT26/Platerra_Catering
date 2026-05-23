@@ -41,18 +41,41 @@ class OrderController
         $mealModel = new MealModel($db);
         $orderModel = new OrderModel($db);
 
-        foreach ($cart as $item) {
-            if ($item == "Şefin Günlük Menüsü") {
-                $totalPrice += $mealModel->getDailyMenuPrice($today);
+        // OrderModel'e aktarılacak olan dizi 
+        $items = [];
+        foreach ($cart as $itemName) {
+            if ($itemName == "Şefin Günlük Menüsü") {
+
+                $price = $mealModel->getDailyMenuPrice($today);
+
+                $items[] = [
+                    'meal_id' => null,
+                    'meal_name' => 'Şefin Günlük Menüsü',
+                    'price' => $price
+                ];
             } else {
-                $totalPrice += $mealModel->getMealPriceByName($item);
+
+                $meal = $mealModel->getMealByName($itemName);
+
+                if ($meal) {
+                    $items[] = [
+                        'meal_id' => $meal['meal_id'],
+                        'meal_name' => $itemName,
+                        'price' => (float)$meal['price']
+                    ];
+                }
             }
         }
+        // Toplam Fiyat
+        foreach ($items as $item) {
+            $totalPrice += $item['price'];
+        }
+
 
         if ($totalPrice > 0) {
 
             try {
-                $orderModel->createOrder($userId, $totalPrice);
+                $orderModel->createOrder($userId, $totalPrice, $items);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Siparişiniz başarıyla alındı!\nÖdenecek tutar: ' . $totalPrice . '₺'
