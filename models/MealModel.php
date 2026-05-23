@@ -1,17 +1,16 @@
 <?php
-
 class MealModel
 {
-    private $connection;
+    private \PDO $connection;
 
     //Sınıf başlatıldığında veritabanı bağlantısını içine alır.
-    public function __construct($database)
+    public function __construct(\PDO $database)
     {
         $this->connection = $database;
     }
 
     //Kategoriye göre yemekleri getirme fonksiyonu saf veri döndürüyoruz 
-    public function getMealsByCategory($category_id)
+    public function getMealsByCategory(int $category_id)
     {
         $sql = "SELECT meal_name,price FROM meals WHERE category_id=:id";
         $stmt = $this->connection->prepare($sql);
@@ -20,7 +19,7 @@ class MealModel
         ]);
         return $stmt->fetchAll();
     }
-    public function getMealPriceByName($mealName)
+    public function getMealPriceByName(string $mealName)
     {
         $sql = "SELECT price FROM meals WHERE meal_name=:name";
         $stmt = $this->connection->prepare($sql);
@@ -56,7 +55,7 @@ class MealModel
         return $stmt->fetchAll();
     }
 
-    public function getDailyMenu($date)
+    public function getDailyMenu(string $date)
     {
 
         $sql = "SELECT 
@@ -84,7 +83,7 @@ class MealModel
         return $stmt->fetch();
     }
 
-    public function getDailyMenuPrice($date)
+    public function getDailyMenuPrice(string $date)
     {
         // COALESCE mantığı eğer o verinin değerini çekemezse değerini 0 yapar.
         $sql = "SELECT 
