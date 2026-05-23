@@ -390,6 +390,7 @@
                         <th>Sipariş ID</th>
                         <th>Müşteri Bilgisi</th>
                         <th>Sipariş Tarihi</th>
+                        <th>Sipariş İçeriği</th> <!--Yeni Sütun-->
                         <th>Toplam Ödenen Tutar</th>
                     </tr>
                 </thead>
@@ -403,6 +404,22 @@
                                     <div style="font-size: 12px; color: #9ca3af;"><?php echo htmlspecialchars($ord['email']); ?></div>
                                 </td>
                                 <td style="font-size: 14px; color: #d1d5db;"><?php echo date('d.m.Y H:i', strtotime($ord['order_date'])); ?></td>
+
+                                <!--Sipariş içeriği-->
+                                <td style="font-size:13px; color:#d1d5db; max-width:260px;">
+                                    <?php if (!empty($ord['item_names'])): ?>
+                                        <span title="<?php echo htmlspecialchars($ord['item_names']); ?>">
+                                            <?php echo htmlspecialchars($ord['item_names']); ?>
+                                        </span>
+                                        <div style="margin-top:4px; font-size:11px; color:#6b7280;">
+                                            <?php echo $ord['item_count']; ?> kalem
+                                        </div>
+                                    <?php else: ?>
+                                        <span style="color:#6b7280; font-style:italic;">Detay yok</span>
+                                    <?php endif; ?>
+                                </td>
+                                <!--Sipariş içeriği-->
+
                                 <td style="font-weight:600; color: #d6b98c;"><?php echo number_format($ord['total_price'], 2, ',', '.'); ?> ₺</td>
                             </tr>
                         <?php endforeach; ?>
