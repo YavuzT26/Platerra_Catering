@@ -3,9 +3,9 @@
 class AdminModel
 {
 
-    private $connection;
+    private \PDO $connection;
 
-    public function __construct($database)
+    public function __construct(\PDO $database)
     {
         $this->connection = $database;
     }
@@ -26,18 +26,37 @@ class AdminModel
     {
 
         $sql = "SELECT 
-            o.*,
-            u.full_name,
-            u.email
-           FROM
-            orders o
-           JOIN users u
-           ON o.user_id=u.user_id
-           ORDER BY o.order_date DESC";
+                    o.*,
+                    u.full_name,
+                    u.email,
+                    COUNT(oi.item_id) AS item_count,
+                    GROUP_CONCAT(oi.meal_name ORDER BY oi.item_id SEPARATOR ', ') AS item_names
+                FROM orders o
+                JOIN  users       u  ON o.user_id  = u.user_id
+                LEFT JOIN order_items oi ON o.order_id = oi.order_id
+                GROUP BY o.order_id
+                ORDER BY o.order_date DESC";
         return $this->connection->query($sql)->fetchAll();
     }
 
-    public function getAllCustomers()
+    public function getOrderItems(int $orderId): array
+    {
+        $sql = "SELECT 
+                meal_name,
+                price
+               FROM
+                order_items
+               WHERE 
+                order_id=:id
+               ORDER BY 
+                item_id ASC";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([
+            ':id' => $orderId
+        ]);
+        return $stmt->fetchAll();
+    }
+    public function getAllCustomers(): array
     {
         $sql = "SELECT 
                 * 
@@ -60,7 +79,7 @@ class AdminModel
         return $this->connection->query($sql)->fetchAll();
     }
 
-    public function addMeal($categoryId, $mealName, $price)
+    public function addMeal(int $categoryId, string $mealName, float  $price)
     {
         $sql = "INSERT INTO
                 meals (category_id,meal_name,price)
@@ -76,7 +95,7 @@ class AdminModel
 
         return $stmt;
     }
-    public function deleteMeal($id)
+    public function deleteMeal(int $id)
     {
         $sql = "DELETE FROM meals WHERE meal_id=:id";
         $stmt = $this->connection->prepare($sql);
@@ -85,7 +104,7 @@ class AdminModel
         return $stmt;
     }
 
-    public function deleteCustomer($id)
+    public function deleteCustomer(int $id)
     {
         try {
             $this->connection->beginTransaction();
