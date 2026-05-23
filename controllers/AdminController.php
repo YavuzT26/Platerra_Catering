@@ -8,9 +8,9 @@ require_once 'models/UserModel.php';
 class AdminController
 {
 
-    private $adminModel;
-    private $mealModel;
-    private $userModel;
+    private AdminModel $adminModel;
+    private MealModel $mealModel;
+    private UserModel $userModel;
 
 
     public function __construct()
@@ -93,7 +93,7 @@ class AdminController
         //Müşteri silme kısmı
 
         // POST olarak düzenlendi
-        if ($_SERVER["REQUEST METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete_customer') {
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete_customer') {
             $customerId = intval($_POST['delete_customer_id']);
             $result = $this->adminModel->deleteCustomer($customerId);
 
