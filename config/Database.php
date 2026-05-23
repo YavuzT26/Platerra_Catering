@@ -8,7 +8,8 @@ class Database
     private $password = "";
     private $charset = "utf8mb4";
 
-    public $pdo;
+    private ?PDO $pdo;
+
 
     public function getConnection()
     {
