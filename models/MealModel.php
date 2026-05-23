@@ -19,15 +19,23 @@ class MealModel
         ]);
         return $stmt->fetchAll();
     }
-    public function getMealPriceByName(string $mealName)
+
+    // Sadece price yerine artık meal_id'de gönderiyoruz
+    // array|false mantığı ise olası geri dönüş tipleri
+    public function getMealByName(string $mealName): array|false
     {
-        $sql = "SELECT price FROM meals WHERE meal_name=:name";
+        $sql = "SELECT meal_id,price FROM meals WHERE meal_name=:name";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute([
             ':name' => $mealName
         ]);
 
-        $result = $stmt->fetch();
+        return $stmt->fetch();
+    }
+    // 
+    public function getMealPriceByName(string $mealName): float
+    {
+        $result = $this->getMealByName($mealName);
 
         return $result ? (float)$result['price'] : 0;
     }
