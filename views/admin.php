@@ -420,22 +420,34 @@
         <div class="management-grid">
             <div class="card">
                 <h2><i class="fa-solid fa-user-plus" style="color:#d6b98c; margin-right:10px;"></i> Yeni Müşteri Kaydet</h2>
+
+
                 <form action="index.php?route=admin_action" method="POST" style="margin-top:20px;">
+
                     <input type="hidden" name="action" value="add_customer">
-                    <div class="form-group">
+                    <!--
+                        Token kontrolü eklendi.    
+                    -->
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
+                    <div class=" form-group">
                         <label for="full_name">Ad Soyad</label>
                         <input type="text" id="full_name" name="full_name" required placeholder="Müşterinin Adı ve Soyadı">
                     </div>
+
                     <div class="form-group">
                         <label for="email">E-posta Adresi</label>
                         <input type="email" id="email" name="email" required placeholder="ornek@mail.com">
                     </div>
+
                     <div class="form-group">
                         <label for="password">Hesap Şifresi</label>
                         <input type="password" id="password" name="password" required placeholder="••••••••">
                     </div>
                     <button type="submit" class="btn"><i class="fa-solid fa-check"></i> Hesabı Oluştur</button>
                 </form>
+
+
             </div>
 
             <div class="table-wrapper">
@@ -456,11 +468,30 @@
                                     <td style="color:#9ca3af;">#<?php echo $cust['user_id']; ?></td>
                                     <td style="font-weight: 500; color:white;"><?php echo htmlspecialchars($cust['full_name']); ?></td>
                                     <td style="color: #d1d5db;"><?php echo htmlspecialchars($cust['email']); ?></td>
+
+
                                     <td>
-                                        <a href="index.php?route=admin_action&delete_customer_id=<?php echo $cust['user_id']; ?>" class="btn-delete" onclick="return confirm('Bu müşteriyi silmek istediğinize emin misiniz?');">
-                                            <i class="fa-solid fa-user-minus"></i> Kaldır
-                                        </a>
+                                        <!-- 
+                                            <a href="index.php?route=admin_action&delete_customer_id=X">
+
+                                            Link yerine form ekleyip POST ile Token kontrolü sağladık
+                                        -->
+                                        <form method="POST" action="index.php?route=admin_action"
+                                            onsubmit="return confirm('Bu müşteriyi silmek istediğinizden emin misiniz?');"
+                                            style="display:inline;">
+
+                                            <input type="hidden" name="action" value="delete_customer">
+                                            <input type="hidden" name="delete_customer_id" value="<?php echo $cust['user_id']; ?>">
+                                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                            <button type="submit" class="btn-delete">
+                                                <i class="fa-solid fa-user-minus">
+                                                </i> Kaldır
+                                            </button>
+
+                                        </form>
                                     </td>
+
+
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -480,6 +511,9 @@
                 <h2><i class="fa-solid fa-plus" style="color:#d6b98c; margin-right:10px;"></i> Yeni Yemek Ekle</h2>
                 <form action="index.php?route=admin_action" method="POST" style="margin-top:20px;">
                     <input type="hidden" name="action" value="add_meal">
+                    <!-- Token kontrolü ekledik-->
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                     <div class="form-group">
                         <label for="meal_name">Yemek Adı</label>
                         <input type="text" id="meal_name" name="meal_name" required placeholder="Örn: Kremalı Mantar Çorbası">
@@ -524,9 +558,19 @@
                                 <td><span style="background: rgba(214,185,140,0.1); color:#d6b98c; padding:4px 10px; border-radius:6px; font-size:13px;"><?php echo htmlspecialchars($meal['category_name']); ?></span></td>
                                 <td style="font-weight:600;"><?php echo round($meal['price']); ?> ₺</td>
                                 <td>
-                                    <a href="index.php?route=admin_action&delete_id=<?php echo $meal['meal_id']; ?>" class="btn-delete" onclick="return confirm('Bu yemeği silmek istediğinize emin misiniz?');">
-                                        <i class="fa-solid fa-trash-can"></i> Sil
-                                    </a>
+
+                                    <!-- <a href="index.php?route=admin_action&delete_id=X">
+                                        
+                                        Link yerine Form ekleyip POST ile Token kontrolü sağladık. 
+                                        -->
+                                    <form method="POST" action="index.php?route=admin_action" onsubmit="return confirm('Bu yemeği silmek istediğinize emin misiniz?');" style="display:inline;">
+                                        <input type="hidden" name="action" value="delete_meal">
+                                        <input type="hidden" name="delete_id" value="<?php echo $meal['meal_id']; ?>">
+                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                        <button type="submit" class="btn-delete">
+                                            <i class="fa-solid fa-trash-can"></i> Sil
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
