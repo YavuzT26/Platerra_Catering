@@ -40,6 +40,14 @@ class AdminController
 
     public function handleAction()
     {
+        // Token kontrolü ile eşleşme olursa işleme girer.
+        // hash_equals() mantığı, eğer == veya === kullanılırsa sistem Zamanlama Saldırılarına açıktır, hash_equals() bunun önüne geçer. 
+        if (
+            !isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+        ) {
+            header("Location: index.php?route=admin&error=" . urlencode("Geçersiz güvenlik tokeni. Lütfen tekrar deneyin."));
+            exit();
+        }
         //Yemek ekleme kısmı
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'add_meal') {
             $categoryId = $_POST['category_id'];
@@ -72,17 +80,21 @@ class AdminController
             }
         }
 
-        //Yemek silme kısmı
-        if (isset($_GET['delete_id'])) {
-            $deleteId = intval($_GET['delete_id']);
+        //Yemek silme kısmı 
+
+        // POST olarak düzenlendi
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete_meal') {
+            $deleteId = intval($_POST['delete_id']);
             $this->adminModel->deleteMeal($deleteId);
-            header("Location: index.php?route=admin&&success=" . urlencode("Yemek başarıyla silindi."));
+            header("Location: index.php?route=admin&success=" . urlencode("Yemek başarıyla silindi."));
             exit();
         }
 
         //Müşteri silme kısmı
-        if (isset($_GET['delete_customer_id'])) {
-            $customerId = intval($_GET['delete_customer_id']);
+
+        // POST olarak düzenlendi
+        if ($_SERVER["REQUEST METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete_customer') {
+            $customerId = intval($_POST['delete_customer_id']);
             $result = $this->adminModel->deleteCustomer($customerId);
 
             if ($result == true) {
