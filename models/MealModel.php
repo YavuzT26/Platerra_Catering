@@ -18,7 +18,6 @@ class MealModel
         $stmt->execute([
             ':id' => $category_id
         ]);
-        //HTML kodu içermiyor artık!!! 
         return $stmt->fetchAll();
     }
     public function getMealPriceByName($mealName)
@@ -87,6 +86,7 @@ class MealModel
 
     public function getDailyMenuPrice($date)
     {
+        // COALESCE mantığı eğer o verinin değerini çekemezse değerini 0 yapar.
         $sql = "SELECT 
                     (
                       COALESCE(s.price,0) 
