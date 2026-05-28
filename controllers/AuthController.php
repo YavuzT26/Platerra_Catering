@@ -5,7 +5,7 @@ require_once 'models/UserModel.php';
 
 class AuthController
 {
-    private $userModel;
+    private UserModel $userModel;
 
     public function __construct()
     {
