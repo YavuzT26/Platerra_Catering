@@ -2,14 +2,14 @@
 
 class UserModel
 {
-    private $connection;
+    private PDO $connection;
 
-    public function __construct($database)
+    public function __construct(PDO $database)
     {
         $this->connection = $database;
     }
 
-    public function getUserByEmail($email)
+    public function getUserByEmail(string $email)
     {
 
         $sql = "SELECT * FROM users WHERE email=:email";
@@ -21,7 +21,7 @@ class UserModel
         return $stmt->fetch();
     }
 
-    public function CreateUser($fullname, $email, $password)
+    public function CreateUser(string $fullname, string $email, string $password)
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
