@@ -3,13 +3,14 @@
 /**
  * Controller tarafından View'a gönderilen değişkenlerin tanımları:
  * @var float $dailyMenuPrice
- * @var array $dailyMenu
- * @var array $corbalar
- * @var array $anaYemekler
- * @var array $zeytinyaglilar
- * @var array $mezeler
- * @var array $tatlilar
- * @var array $icecekler
+ * @var string $dailyMenu
+ * @var string $corbalar
+ * @var string $anaYemekler
+ * @var string $zeytinyaglilar
+ * @var string $mezeler
+ * @var string $tatlilar
+ * @var string $icecekler
+ * @var array $data
  */
 ?>
 
@@ -178,7 +179,7 @@
             <h3>Çorbalar</h3>
             <p>Sıcak başlangıçlar</p>
             <ul class="sub-menu">
-                <?php foreach ($corbalar as $corba): ?>
+                <?php foreach ($data['corbalar'] as $corba): ?>
                     <li onclick="addToCart('<?php echo htmlspecialchars($corba['meal_name']); ?>'
                         ,<?php echo $corba['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($corba['meal_name']); ?></span>
@@ -192,7 +193,7 @@
             <h3>Ana Yemekler</h3>
             <p>Özel davetlere uygun ana tabaklar.</p>
             <ul class="sub-menu">
-                <?php foreach ($anaYemekler as $yemek): ?>
+                <?php foreach ($data['anaYemekler'] as $yemek): ?>
                     <li onclick="addToCart('<?php echo htmlspecialchars($yemek['meal_name']); ?>', <?php echo $yemek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($yemek['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($yemek['price']); ?> ₺</span>
@@ -205,7 +206,7 @@
             <h3>Zeytinyağlılar</h3>
             <p>Hafif ve sağlıklı seçenekler.</p>
             <ul class="sub-menu">
-                <?php foreach ($zeytinyaglilar as $zeytinyagli): ?>
+                <?php foreach ($data['zeytinyaglilar'] as $zeytinyagli): ?>
                     <li onclick="addToCart('<?php echo htmlspecialchars($zeytinyagli['meal_name']); ?>', <?php echo $zeytinyagli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($zeytinyagli['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($zeytinyagli['price']); ?> ₺</span>
@@ -218,7 +219,7 @@
             <h3>Mezeler</h3>
             <p>Lezzetli başlangıç alternatifleri.</p>
             <ul class="sub-menu">
-                <?php foreach ($mezeler as $meze): ?>
+                <?php foreach ($data['mezeler'] as $meze): ?>
                     <li onclick="addToCart('<?php echo htmlspecialchars($meze['meal_name']); ?>', <?php echo $meze['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($meze['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($meze['price']); ?> ₺</span>
@@ -231,7 +232,7 @@
             <h3>Tatlılar</h3>
             <p>Zarif sunumlarla final dokunuşu.</p>
             <ul class="sub-menu">
-                <?php foreach ($tatlilar as $tatli): ?>
+                <?php foreach ($data['tatlilar'] as $tatli): ?>
                     <li onclick="addToCart('<?php echo htmlspecialchars($tatli['meal_name']); ?>', <?php echo $tatli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($tatli['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($tatli['price']); ?> ₺</span>
@@ -244,7 +245,7 @@
             <h3>İçecekler</h3>
             <p>Menülere eşlik eden içecek alternatifleri.</p>
             <ul class="sub-menu">
-                <?php foreach ($icecekler as $icecek): ?>
+                <?php foreach ($data['icecekler'] as $icecek): ?>
                     <li onclick="addToCart('<?php echo htmlspecialchars($icecek['meal_name']); ?>', <?php echo $icecek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($icecek['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($icecek['price']); ?> ₺</span>
@@ -258,7 +259,11 @@
         <h2 class="section-title">Hakkımızda</h2>
         <div class="banner">
             <div class="banner-text">
-                PLATERRA olarak özel davetler, şirket organizasyonları ve toplu yemek hizmetlerinde premium catering deneyimi sunuyoruz...
+                PLATERRA olarak özel davetler, şirket organizasyonları
+                ve toplu yemek hizmetlerinde premium catering deneyimi sunuyoruz.
+                <br>
+                Şık sunum anlayışımız, kaliteli malzeme seçimimiz ve profesyonel
+                mutfak ekibimiz ile her etkinliği unutulmaz hale getiriyoruz.
             </div>
             <div class="banner-image"></div>
         </div>
