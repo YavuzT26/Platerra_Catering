@@ -9,6 +9,86 @@ class MealModel
         $this->connection = $database;
     }
 
+    // OTOMATİK MENÜ OLUŞTURMA KISMI // 
+
+    // Menü var mı kontrolü
+
+    public function checkMenuExists(string $date): bool
+    {
+        $sql = "SELECT 
+                menu_id
+              FROM
+                dailymenu
+              WHERE 
+                menu_date=:date 
+              LIMIT 1";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([
+            ':date' => $date
+        ]);
+        return (bool) $stmt->fetchColumn();
+    }
+
+    // Rastgele Çıkmamış Menü Oluşturma Kısmı
+    public function getRandomMenu(int $categoryId, string $columnName, string $targetDate, int $days): array|false
+    {
+        $allowed = ['soup_id', 'main_course_id', 'olive_oil_id', 'appetizer_id', 'dessert_id', 'drink_id'];
+        if (!in_array($columnName, $allowed, true)) {
+            throw new \InvalidArgumentException("Geçersiz kolon adı: $columnName");
+        }
+        $safeDays = (int)$days;
+        $sql = "SELECT
+                meal_id
+              FROM
+                meals
+              WHERE 
+                category_id=:cat_id
+              AND 
+                meal_id NOT IN(
+                        SELECT {$columnName} 
+                        FROM dailymenu
+                        WHERE menu_date>=DATE_SUB(:target_date, INTERVAL {$safeDays} DAY)
+                        AND {$columnName} IS NOT NULL)
+              ORDER BY RAND() LIMIT 1";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([
+            ':cat_id' => $categoryId,
+            ':target_date' => $targetDate
+        ]);
+
+        return $stmt->fetch();
+    }
+
+    // Yemek seçemezse kilitlenmesin diye önlem
+    public function getFallbackRandomMeal(int $categoryId): array|false
+    {
+        $sql = "SELECT 
+                meal_id
+              FROM 
+                meals 
+              WHERE 
+                category_id=:cat_id
+              ORDER BY RAND() LIMIT 1";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([
+            ':cat_id' => $categoryId
+        ]);
+
+        return $stmt->fetch();
+    }
+    // Random Oluşturulan Menüyü Veri Tabanına Ekleme
+    public function insertDailyMenu(array  $data): bool
+    {
+        $sql = "INSERT INTO
+                dailymenu (menu_date, soup_id, main_course_id, olive_oil_id, appetizer_id, dessert_id, drink_id)
+              VALUES
+                (:menu_date, :soup_id, :main_course_id, :olive_oil_id, :appetizer_id, :dessert_id, :drink_id)";
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute($data);
+    }
+
     //Kategoriye göre yemekleri getirme fonksiyonu saf veri döndürüyoruz 
     public function getMealsByCategory(int $category_id)
     {
@@ -65,7 +145,6 @@ class MealModel
 
     public function getDailyMenu(string $date)
     {
-
         $sql = "SELECT 
             dm.menu_date,
             s.meal_name AS Corba,
