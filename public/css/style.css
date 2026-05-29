@@ -1069,6 +1069,38 @@ footer p {
 /* ŞIK TOAST BİLDİRİMLERİ    */
 /* ========================= */
 
+/* TOAST PROGRESS BAR (İlerleme Çubuğu) */
+.toast {
+    position: relative;
+    overflow: hidden;
+    /* Çizginin taşmaması için */
+}
+
+.toast::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    animation: toastProgress 3.5s linear forwards;
+}
+
+/* Başarı ve Hata durumlarına göre çizgi rengi */
+.toast.success::after {
+    background: #d6b98c;
+}
+
+.toast.error::after {
+    background: #ef4444;
+}
+
+@keyframes toastProgress {
+    100% {
+        width: 0;
+    }
+}
+
 .toast-container {
     position: fixed;
     top: 30px;
