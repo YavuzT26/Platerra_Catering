@@ -230,3 +230,68 @@ function showToast(message, type = 'success') {
         }, 500);
     }, 2500);
 }
+/* ========================= */
+/* LIGHTBOX (GALERİ) SİSTEMİ */
+/* ========================= */
+
+// CSS'teki resim linklerinin aynısını bir diziye (array) alıyoruz
+const galleryImages = [
+    "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80", // index 0 (one)
+    "https://images.unsplash.com/photo-1605926637512-c8b131444a4b?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0", // index 1 (two)
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=80", // index 2 (three)
+    "https://images.unsplash.com/photo-1615937722923-67f6deaf2cc9?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0", // index 3 (four)
+    "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0", // index 4 (five)
+    "https://images.unsplash.com/photo-1608835291093-394b0c943a75?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0"  // index 5 (six)
+];
+
+let currentImageIndex = 0;
+const lightboxModal = document.getElementById("lightboxModal");
+const lightboxImg = document.getElementById("lightboxImage");
+
+function openLightbox(index) {
+    currentImageIndex = index;
+    lightboxImg.src = galleryImages[currentImageIndex];
+    lightboxModal.style.display = "flex";
+}
+
+function closeLightbox() {
+    lightboxModal.style.display = "none";
+}
+
+function changeImage(direction) {
+    currentImageIndex += direction;
+
+    // Başa veya sona gelindiğinde sonsuz döngü (Loop) yapması için sınırları belirliyoruz
+    if (currentImageIndex < 0) {
+        currentImageIndex = galleryImages.length - 1; // En başa gelirse en sona at
+    } else if (currentImageIndex >= galleryImages.length) {
+        currentImageIndex = 0; // En sona gelirse en başa at
+    }
+
+    // CSS animasyonunu tetiklemek için ufak bir yenileme hilesi
+    lightboxImg.style.animation = 'none';
+    lightboxImg.offsetHeight; /* tarayıcıyı DOM'u yeniden okumaya zorlar */
+    lightboxImg.style.animation = 'imageFadeIn 0.4s ease';
+
+    lightboxImg.src = galleryImages[currentImageIndex];
+}
+
+// Resim dışındaki o karanlık alana tıklandığında pencereyi kapatma kuralı
+lightboxModal.addEventListener('click', function (e) {
+    if (e.target === lightboxModal || e.target.classList.contains('lightbox-content')) {
+        closeLightbox();
+    }
+});
+
+// Klavye kontrolleri (Kullanıcı deneyimini mükemmelleştirir)
+window.addEventListener('keydown', function (event) {
+    if (lightboxModal.style.display === "flex") {
+        if (event.key === "ArrowRight") {
+            changeImage(1); // Sağ ok
+        } else if (event.key === "ArrowLeft") {
+            changeImage(-1); // Sol ok
+        } else if (event.key === "Escape") {
+            closeLightbox(); // ESC tuşu
+        }
+    }
+});
