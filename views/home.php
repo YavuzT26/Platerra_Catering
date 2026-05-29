@@ -48,7 +48,6 @@
             </div>
             <?php unset($_SESSION['hata_mesaji']); ?>
         <?php endif; ?>
-
     </div>
     <header>
         <div class="navbar">
@@ -323,6 +322,14 @@
         <p><i class="fa-solid fa-envelope" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;"> info@platerra.com</a> </p>
     </footer>
 
+    <?php if (isset($_GET['open_login']) && $_GET['open_login'] == 1): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // script.js içindeki modal açma fonksiyonunu çağırıyoruz
+                openModal('loginModal');
+            });
+        </script>
+    <?php endif; ?>
 </body>
 
 </html>
