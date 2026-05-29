@@ -78,7 +78,7 @@ class OrderController
                 $orderModel->createOrder($userId, $totalPrice, $items);
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Siparişiniz başarıyla alındı!\nÖdenecek tutar: ' . $totalPrice . '₺'
+                    'message' => "Siparişiniz başarıyla alındı!\n\nÖdenecek tutar: " . $totalPrice . '₺'
                 ]);
             } catch (\PDOException $e) {
                 echo json_encode([
