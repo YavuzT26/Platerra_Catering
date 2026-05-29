@@ -48,9 +48,26 @@ class OrderController
 
                 $price = $mealModel->getDailyMenuPrice($today);
 
+                $dailyMenu = $mealModel->getDailyMenu($today);
+                $menuDetails = "";
+
+                if ($dailyMenu) {
+                    $meals = [
+                        $dailyMenu['Corba'] ?? null,
+                        $dailyMenu['Ana_Yemek'] ?? null,
+                        $dailyMenu['Zeytinyagli'] ?? null,
+                        $dailyMenu['Meze'] ?? null,
+                        $dailyMenu['Tatli'] ?? null,
+                        $dailyMenu['Icecek'] ?? null
+                    ];
+                    $validMeals = array_filter($meals);
+                    if (!empty($validMeals)) {
+                        $menuDetails = "\n-" . implode(', ', $validMeals);
+                    }
+                }
                 $items[] = [
                     'meal_id' => null,
-                    'meal_name' => 'Şefin Günlük Menüsü',
+                    'meal_name' => 'Şefin Günlük Menüsü' . $menuDetails,
                     'price' => $price
                 ];
             } else {
