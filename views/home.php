@@ -271,12 +271,12 @@
     <section>
         <h2 class="section-title">Galeri</h2>
         <div class="gallery">
-            <div class="gallery-item one"></div>
-            <div class="gallery-item two"></div>
-            <div class="gallery-item three"></div>
-            <div class="gallery-item four"></div>
-            <div class="gallery-item five"></div>
-            <div class="gallery-item six"></div>
+            <div class="gallery-item one" onclick="openLightbox(0)"></div>
+            <div class="gallery-item two" onclick="openLightbox(1)"></div>
+            <div class="gallery-item three" onclick="openLightbox(2)"></div>
+            <div class="gallery-item four" onclick="openLightbox(3)"></div>
+            <div class="gallery-item five" onclick="openLightbox(4)"></div>
+            <div class="gallery-item six" onclick="openLightbox(5)"></div>
         </div>
     </section>
 
@@ -321,7 +321,14 @@
         <p><i class="fa-solid fa-phone" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;">+90 552 817 1400</a></p>
         <p><i class="fa-solid fa-envelope" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;"> info@platerra.com</a> </p>
     </footer>
-
+    <div id="lightboxModal" class="lightbox-overlay">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-content">
+            <i class="fa-solid fa-chevron-left lightbox-prev" onclick="changeImage(-1)"></i>
+            <img id="lightboxImage" src="" alt="PLATERRA Galeri">
+            <i class="fa-solid fa-chevron-right lightbox-next" onclick="changeImage(1)"></i>
+        </div>
+    </div>
     <?php if (isset($_GET['open_login']) && $_GET['open_login'] == 1): ?>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
