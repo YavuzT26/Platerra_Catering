@@ -103,7 +103,7 @@ function removeFromCart(index) {
 function addDailyMenu(dynamicPrice) {
     cart.push({ name: "Şefin Günlük Menüsü", price: parseFloat(dynamicPrice) });
     updateCart();
-    alert("Şefin günlük menüsü sepete eklendi!");
+    showToast("Şefin günlük menüsü sepete eklendi!");
 }
 
 function updateCart() {
@@ -144,7 +144,7 @@ function updateCart() {
 /* SİPARİŞİ TAMAMLA (FETCH API) */
 async function completeOrder() {
     if (cart.length === 0) {
-        alert('Sepetiniz boş!');
+        showToast('Sepetiniz boş!');
         return;
     }
 
@@ -165,19 +165,19 @@ async function completeOrder() {
         const data = await response.json();
 
         if (data.status === 'success') {
-            alert(data.message);
+            showToast(data.message);
             cart = [];
             updateCart();
             document.getElementById('cartMenu').style.display = 'none';
         } else {
-            alert(data.message);
+            showToast(data.message);
             if (data.redirect === 'login') {
                 openModal('loginModal');
             }
         }
     } catch (error) {
         console.error('Sipariş hatası:', error);
-        alert("Sipariş işlenirken bir sunucu hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyiniz!");
+        showToast("Sipariş işlenirken bir sunucu hatası oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyiniz!");
     }
 }
 
@@ -200,6 +200,33 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
                 toast.remove();
             }, 500);
-        }, 3500);
+        }, 2500);
     });
 });
+
+/* DİNAMİK TOAST BİLDİRİM OLUŞTURUCU */
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    // Başarı veya hata durumuna göre ikon seçimi
+    const iconClass = type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark';
+
+    toast.innerHTML = `
+        <i class="fa-solid ${iconClass}"></i>
+        <span>${message}</span>
+    `;
+
+    container.appendChild(toast);
+
+    // 3.5 saniye sonra gizleme animasyonunu başlat
+    setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => {
+            toast.remove();
+        }, 500);
+    }, 2500);
+}
