@@ -26,9 +26,13 @@ class AuthController
 
             if ($existingUser) {
                 $_SESSION['hata_mesaji'] = "Girdiğiniz bilgiler hatalıdır.";
+                header("Location: index.php");
+                exit();
             } else {
                 $this->userModel->CreateUser($fullname, $email, $password);
                 $_SESSION['basari_mesaji'] = "Hesabınız başarıyla oluşturuldu.";
+                header("Location: index.php?open_login=1");
+                exit();
             }
 
             header("Location: index.php");
@@ -38,7 +42,6 @@ class AuthController
 
     public function login()
     {
-
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = trim($_POST['email']);
             $password = $_POST['password'];
@@ -49,7 +52,7 @@ class AuthController
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['user_name'] = $user['full_name'];
                 $_SESSION['is_admin'] = $user['is_admin'];
-                $_SESSION['basari_mesaji'] = "Hoşgeldin " . $user['full_name'];
+                $_SESSION['basari_mesaji'] = "Hoş geldiniz, " . htmlspecialchars($user['full_name']) . "!";
 
                 if ($user['is_admin'] == 1) {
                     header("Location: index.php?route=admin");
@@ -65,8 +68,18 @@ class AuthController
 
     public function logout()
     {
+        // 1. Mevcut session'ı temizle ve yok et
         session_unset();
         session_destroy();
+
+        // 2. Çıkış mesajını taşıyabilmek için temiz bir session başlat
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // 3. Başarı mesajını yeni temiz oturuma yaz
+        $_SESSION['basari_mesaji'] = "Başarıyla çıkış yaptınız. Yine bekleriz!";
+
         header("Location: index.php");
         exit();
     }
