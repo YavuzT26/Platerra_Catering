@@ -34,9 +34,6 @@ class AuthController
                 header("Location: index.php?open_login=1");
                 exit();
             }
-
-            header("Location: index.php");
-            exit();
         }
     }
 
