@@ -1,43 +1,43 @@
 <?php
 class MealModel
 {
-    private \PDO $connection;
+  private \PDO $connection;
 
-    //Sınıf başlatıldığında veritabanı bağlantısını içine alır.
-    public function __construct(\PDO $database)
-    {
-        $this->connection = $database;
-    }
+  //Sınıf başlatıldığında veritabanı bağlantısını içine alır.
+  public function __construct(\PDO $database)
+  {
+    $this->connection = $database;
+  }
 
-    // OTOMATİK MENÜ OLUŞTURMA KISMI // 
+  // OTOMATİK MENÜ OLUŞTURMA KISMI // 
 
-    // Menü var mı kontrolü
+  // Menü var mı kontrolü
 
-    public function checkMenuExists(string $date): bool
-    {
-        $sql = "SELECT 
+  public function checkMenuExists(string $date): bool
+  {
+    $sql = "SELECT 
                 menu_id
               FROM
                 dailymenu
               WHERE 
                 menu_date=:date 
               LIMIT 1";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':date' => $date
-        ]);
-        return (bool) $stmt->fetchColumn();
-    }
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([
+      ':date' => $date
+    ]);
+    return (bool) $stmt->fetchColumn();
+  }
 
-    // Rastgele Çıkmamış Menü Oluşturma Kısmı
-    public function getRandomMenu(int $categoryId, string $columnName, string $targetDate, int $days): array|false
-    {
-        $allowed = ['soup_id', 'main_course_id', 'olive_oil_id', 'appetizer_id', 'dessert_id', 'drink_id'];
-        if (!in_array($columnName, $allowed, true)) {
-            throw new \InvalidArgumentException("Geçersiz kolon adı: $columnName");
-        }
-        $safeDays = (int)$days;
-        $sql = "SELECT
+  // Rastgele Çıkmamış Menü Oluşturma Kısmı
+  public function getRandomMenu(int $categoryId, string $columnName, string $today, int $days): array|false
+  {
+    $allowed = ['soup_id', 'main_course_id', 'olive_oil_id', 'appetizer_id', 'dessert_id', 'drink_id'];
+    if (!in_array($columnName, $allowed, true)) {
+      throw new \InvalidArgumentException("Geçersiz kolon adı: $columnName");
+    }
+    $safeDays = (int)$days;
+    $sql = "SELECT
                 meal_id
               FROM
                 meals
@@ -47,85 +47,85 @@ class MealModel
                 meal_id NOT IN(
                         SELECT {$columnName} 
                         FROM dailymenu
-                        WHERE menu_date>=DATE_SUB(:target_date, INTERVAL {$safeDays} DAY)
+                        WHERE menu_date>=DATE_SUB(:today, INTERVAL {$safeDays} DAY)
                         AND {$columnName} IS NOT NULL)
               ORDER BY RAND() LIMIT 1";
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':cat_id' => $categoryId,
-            ':target_date' => $targetDate
-        ]);
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([
+      ':cat_id' => $categoryId,
+      ':today' => $today
+    ]);
 
-        return $stmt->fetch();
-    }
+    return $stmt->fetch();
+  }
 
-    // Yemek seçemezse kilitlenmesin diye önlem
-    public function getFallbackRandomMeal(int $categoryId): array|false
-    {
-        $sql = "SELECT 
+  // Yemek seçemezse kilitlenmesin diye önlem
+  public function getFallbackRandomMeal(int $categoryId): array|false
+  {
+    $sql = "SELECT 
                 meal_id
               FROM 
                 meals 
               WHERE 
                 category_id=:cat_id
               ORDER BY RAND() LIMIT 1";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':cat_id' => $categoryId
-        ]);
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([
+      ':cat_id' => $categoryId
+    ]);
 
-        return $stmt->fetch();
-    }
-    // Random Oluşturulan Menüyü Veri Tabanına Ekleme
-    public function insertDailyMenu(array  $data): bool
-    {
-        $sql = "INSERT INTO
+    return $stmt->fetch();
+  }
+  // Random Oluşturulan Menüyü Veri Tabanına Ekleme
+  public function insertDailyMenu(array  $data): bool
+  {
+    $sql = "INSERT INTO
                 dailymenu (menu_date, soup_id, main_course_id, olive_oil_id, appetizer_id, dessert_id, drink_id)
               VALUES
                 (:menu_date, :soup_id, :main_course_id, :olive_oil_id, :appetizer_id, :dessert_id, :drink_id)";
-        $stmt = $this->connection->prepare($sql);
+    $stmt = $this->connection->prepare($sql);
 
-        return $stmt->execute($data);
-    }
+    return $stmt->execute($data);
+  }
 
-    //Kategoriye göre yemekleri getirme fonksiyonu saf veri döndürüyoruz 
-    public function getMealsByCategory(int $category_id)
-    {
-        $sql = "SELECT meal_name,price FROM meals WHERE category_id=:id";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':id' => $category_id
-        ]);
-        return $stmt->fetchAll();
-    }
+  //Kategoriye göre yemekleri getirme fonksiyonu saf veri döndürüyoruz 
+  public function getMealsByCategory(int $category_id)
+  {
+    $sql = "SELECT meal_name,price FROM meals WHERE category_id=:id";
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([
+      ':id' => $category_id
+    ]);
+    return $stmt->fetchAll();
+  }
 
-    // Sadece price yerine artık meal_id'de gönderiyoruz
-    // array|false mantığı ise olası geri dönüş tipleri
-    public function getMealByName(string $mealName): array|false
-    {
-        $sql = "SELECT meal_id,price FROM meals WHERE meal_name=:name";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':name' => $mealName
-        ]);
+  // Sadece price yerine artık meal_id'de gönderiyoruz
+  // array|false mantığı ise olası geri dönüş tipleri
+  public function getMealByName(string $mealName): array|false
+  {
+    $sql = "SELECT meal_id,price FROM meals WHERE meal_name=:name";
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([
+      ':name' => $mealName
+    ]);
 
-        return $stmt->fetch();
-    }
-    // 
-    public function getMealPriceByName(string $mealName): float
-    {
-        $result = $this->getMealByName($mealName);
+    return $stmt->fetch();
+  }
+  // 
+  public function getMealPriceByName(string $mealName): float
+  {
+    $result = $this->getMealByName($mealName);
 
-        return $result ? (float)$result['price'] : 0;
-    }
+    return $result ? (float)$result['price'] : 0;
+  }
 
 
-    // Admin Sayfasında Kullanacağız
-    public function getAllMeals()
-    {
+  // Admin Sayfasında Kullanacağız
+  public function getAllMeals()
+  {
 
-        $sql = "SELECT 
+    $sql = "SELECT 
             m.*,
             c.category_name
           FROM
@@ -137,15 +137,15 @@ class MealModel
           ORDER BY 
             m.meal_id DESC";
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute();
 
-        return $stmt->fetchAll();
-    }
+    return $stmt->fetchAll();
+  }
 
-    public function getDailyMenu(string $date)
-    {
-        $sql = "SELECT 
+  public function getDailyMenu(string $date)
+  {
+    $sql = "SELECT 
             dm.menu_date,
             s.meal_name AS Corba,
             mc.meal_name AS Ana_Yemek,
@@ -162,18 +162,18 @@ class MealModel
            LEFT JOIN meals des ON dm.dessert_id = des.meal_id
            LEFT JOIN meals dr ON dm.drink_id = dr.meal_id
            WHERE dm.menu_date = :bugun LIMIT 1";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':bugun' => $date
-        ]);
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([
+      ':bugun' => $date
+    ]);
 
-        return $stmt->fetch();
-    }
+    return $stmt->fetch();
+  }
 
-    public function getDailyMenuPrice(string $date)
-    {
-        // COALESCE mantığı eğer o verinin değerini çekemezse değerini 0 yapar.
-        $sql = "SELECT 
+  public function getDailyMenuPrice(string $date)
+  {
+    // COALESCE mantığı eğer o verinin değerini çekemezse değerini 0 yapar.
+    $sql = "SELECT 
                     (
                       COALESCE(s.price,0) 
                     + COALESCE(mc.price,0)
@@ -190,13 +190,13 @@ class MealModel
                   LEFT JOIN meals des ON dm.dessert_id = des.meal_id
                   LEFT JOIN meals dr ON dm.drink_id = dr.meal_id
                   WHERE dm.menu_date = :bugun LIMIT 1";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':bugun' => $date
-        ]);
+    $stmt = $this->connection->prepare($sql);
+    $stmt->execute([
+      ':bugun' => $date
+    ]);
 
-        $result = $stmt->fetch();
+    $result = $stmt->fetch();
 
-        return $result ? (float)$result['total_price'] : 0;
-    }
+    return $result ? (float)$result['total_price'] : 0;
+  }
 }
