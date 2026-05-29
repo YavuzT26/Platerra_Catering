@@ -348,12 +348,36 @@
     <div class="container">
         <h1>Sistem Kontrol & Firma Durum Paneli</h1>
 
-        <?php if (isset($_GET['success'])): ?>
-            <div class="alert"><i class="fa-solid fa-circle-check"></i> <?php echo htmlspecialchars($_GET['success']); ?></div>
-        <?php endif; ?>
-        <?php if (isset($_GET['error'])): ?>
-            <div class="alert alert-error"><i class="fa-solid fa-triangle-exclamation"></i> <?php echo htmlspecialchars($_GET['error']); ?></div>
-        <?php endif; ?>
+        <div class="toast-container" id="toastContainer" style="position: fixed; top: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 15px;">
+            <?php if (isset($_GET['success'])): ?>
+                <div class="toast success" style="min-width: 300px; background: #111827; color: white; padding: 18px 24px; border-radius: 16px; font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-left: 5px solid #d6b98c; position: relative; overflow: hidden;">
+                    <i class="fa-solid fa-circle-check" style="color: #d6b98c; font-size: 22px;"></i>
+                    <span><?php echo htmlspecialchars($_GET['success']); ?></span>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_GET['error'])): ?>
+                <div class="toast error" style="min-width: 300px; background: #111827; color: white; padding: 18px 24px; border-radius: 16px; font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-left: 5px solid #ef4444; position: relative; overflow: hidden;">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 22px;"></i>
+                    <span><?php echo htmlspecialchars($_GET['error']); ?></span>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <script>
+            // Admin panelindeki bildirimleri otomatik kapatma
+            document.addEventListener("DOMContentLoaded", function() {
+                const toasts = document.querySelectorAll('.toast');
+                toasts.forEach(toast => {
+                    setTimeout(() => {
+                        toast.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                        toast.style.opacity = "0";
+                        toast.style.transform = "translateX(120%)";
+                        setTimeout(() => toast.remove(), 500);
+                    }, 2500);
+                });
+            });
+        </script>
 
         <div class="stats-grid">
             <div class="stat-card">
@@ -409,7 +433,7 @@
                                 <td style="font-size:13px; color:#d1d5db; max-width:260px;">
                                     <?php if (!empty($ord['item_names'])): ?>
                                         <span title="<?php echo htmlspecialchars($ord['item_names']); ?>">
-                                            <?php echo htmlspecialchars($ord['item_names']); ?>
+                                            <?php echo nl2br(htmlspecialchars($ord['item_names'])); ?>
                                         </span>
                                         <div style="margin-top:4px; font-size:11px; color:#6b7280;">
                                             <?php echo $ord['item_count']; ?> kalem
@@ -493,18 +517,14 @@
 
                                             Link yerine form ekleyip POST ile Token kontrolü sağladık
                                         -->
-                                        <form method="POST" action="index.php?route=admin_action"
-                                            onsubmit="return confirm('Bu müşteriyi silmek istediğinizden emin misiniz?');"
-                                            style="display:inline;">
-
+                                        <form method="POST" action="index.php?route=admin_action" id="deleteCustomerForm_<?php echo $cust['user_id']; ?>" style="display:inline;">
                                             <input type="hidden" name="action" value="delete_customer">
                                             <input type="hidden" name="delete_customer_id" value="<?php echo $cust['user_id']; ?>">
                                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                                            <button type="submit" class="btn-delete">
-                                                <i class="fa-solid fa-user-minus">
-                                                </i> Kaldır
-                                            </button>
 
+                                            <button type="button" class="btn-delete" onclick="openConfirmModal('deleteCustomerForm_<?php echo $cust['user_id']; ?>', 'Bu müşteriyi ve ilişkili sipariş geçmişini silmek istediğinizden emin misiniz?')">
+                                                <i class="fa-solid fa-user-minus"></i> Kaldır
+                                            </button>
                                         </form>
                                     </td>
 
@@ -580,11 +600,12 @@
                                         
                                         Link yerine Form ekleyip POST ile Token kontrolü sağladık. 
                                         -->
-                                    <form method="POST" action="index.php?route=admin_action" onsubmit="return confirm('Bu yemeği silmek istediğinize emin misiniz?');" style="display:inline;">
+                                    <form method="POST" action="index.php?route=admin_action" id="deleteMealForm_<?php echo $meal['meal_id']; ?>" style="display:inline;">
                                         <input type="hidden" name="action" value="delete_meal">
                                         <input type="hidden" name="delete_id" value="<?php echo $meal['meal_id']; ?>">
                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                                        <button type="submit" class="btn-delete">
+
+                                        <button type="button" class="btn-delete" onclick="openConfirmModal('deleteMealForm_<?php echo $meal['meal_id']; ?>', 'Bu yemeği menüden kaldırmak istediğinize emin misiniz?')">
                                             <i class="fa-solid fa-trash-can"></i> Sil
                                         </button>
                                     </form>
@@ -597,6 +618,17 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="customConfirmModal" style="display:none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: #111827; width: 90%; max-width: 400px; padding: 40px; border-radius: 35px; text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; color: #ef4444; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.3));"></i>
+            <h2 style="color: white; font-family: 'Playfair Display', serif; margin-bottom: 15px; font-size: 26px;">Emin misiniz?</h2>
+            <p id="confirmModalText" style="color: #d1d5db; font-size: 15px; margin-bottom: 30px; line-height: 1.6;"></p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button type="button" class="btn" style="background: rgba(255,255,255,0.08); color: white; box-shadow: none; padding: 12px 25px; border-radius: 12px;" onclick="closeConfirmModal()">Vazgeç</button>
+                <button type="button" class="btn" id="confirmSuccessBtn" style="background: #ef4444; color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); padding: 12px 25px; border-radius: 12px;">Evet, Sil</button>
+            </div>
+        </div>
+    </div>
     <script>
         function filterMeals() {
             const input = document.getElementById('menuSearch');
@@ -617,6 +649,34 @@
                 }
             }
         }
+
+        let activeFormToSubmit = null;
+
+        function openConfirmModal(formId, message) {
+            activeFormToSubmit = document.getElementById(formId);
+            document.getElementById('confirmModalText').innerText = message;
+            document.getElementById('customConfirmModal').style.display = 'flex';
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('customConfirmModal').style.display = 'none';
+            activeFormToSubmit = null;
+        }
+
+        // Onay modalındaki "Evet, Sil" butonuna basıldığında formu gönderir
+        document.getElementById('confirmSuccessBtn').addEventListener('click', function() {
+            if (activeFormToSubmit) {
+                activeFormToSubmit.submit();
+            }
+        });
+
+        // Dışarı tıklayınca modalın kapanması kuralı
+        window.addEventListener('click', function(event) {
+            const confirmModal = document.getElementById('customConfirmModal');
+            if (event.target === confirmModal) {
+                closeConfirmModal();
+            }
+        });
     </script>
 </body>
 
