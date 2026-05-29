@@ -28,12 +28,21 @@ header {
 
 .navbar {
     width: 100%;
-    background: #020617;
-    padding: 20px 60px;
+    /* Sabit siyah yerine hafif şeffaf arka plan */
+    background: rgba(2, 6, 23, 0.90);
+    /* Sayfa kaydırılırken arkadaki görselleri şık bir şekilde bulanıklaştırır */
+    backdrop-filter: blur(12px);
+
+    /* Yüksekliği (20px -> 28px) artırdık. 
+       Yan boşlukları sayfanın geri kalanıyla hizalı olması için %7 yaptık */
+    padding: 28px 7%;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    /* Navbar'ın altını içerikten ayıran çok ince, lüks bir çizgi */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .logo {
@@ -48,13 +57,19 @@ header {
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 25px;
+    /* Linkler arasındaki boşluğu 25px'ten 35px'e çıkarıp ferahlattık */
+    gap: 35px;
 }
 
 .nav-right a {
     text-decoration: none;
-    color: white;
+    color: #f3f4f6;
+    /* Göz yormayan, çok hafif kırık beyaz */
+    font-size: 16px;
+    font-weight: 500;
     transition: 0.3s;
+    letter-spacing: 0.5px;
+    /* Kelimelerin biraz daha rahat okunması için harf arası boşluk */
 }
 
 .nav-right a:hover {
@@ -476,8 +491,12 @@ section {
 
 .gallery-item {
     min-height: 250px;
+    background-size: cover;
+    background-position: center;
     transition: .3s;
-    border-radius: 50px;
+    border-radius: 35px;
+    cursor: pointer;
+    /* Üzerine gelince el işareti çıkar */
 }
 
 .gallery-item:hover {
@@ -528,6 +547,11 @@ footer p {
 
 /* RESPONSIVE */
 
+/* ========================= */
+/* RESPONSIVE (MOBİL UYUMLULUK) */
+/* ========================= */
+
+/* TABLET EKRANLAR (900px ve altı) */
 @media(max-width:900px) {
 
     .hero,
@@ -548,6 +572,43 @@ footer p {
         font-size: 42px;
     }
 
+    /* Galeri tabletlerde 2 sütun olsun */
+    .gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Mobilde görsellerin çok fazla dikey alan kaplamasını engelliyoruz */
+    .hero-image {
+        min-height: 400px;
+    }
+
+    .banner-image {
+        min-height: 300px;
+    }
+}
+
+/* TELEFON EKRANLARI (600px ve altı) */
+@media(max-width: 600px) {
+
+    /* Galeri telefonlarda 1 sütun (alt alta) olsun */
+    .gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-image {
+        min-height: 250px;
+        border-radius: 20px;
+    }
+
+    .gallery-item {
+        min-height: 200px;
+        /* Telefonda galeri kartları biraz daha ufalsın */
+    }
+
+    .section-title {
+        font-size: 32px;
+        /* Başlıklar telefonda çok büyük durmasın */
+    }
 }
 
 
@@ -854,32 +915,6 @@ footer p {
     font-weight: 600;
 }
 
-/* responsive */
-
-@media(max-width:1000px) {
-
-    .premium-content {
-        grid-template-columns: 1fr;
-    }
-
-    .premium-left h2 {
-        font-size: 46px;
-    }
-
-}
-
-@media(max-width:700px) {
-
-    .premium-right {
-        grid-template-columns: 1fr;
-    }
-
-    .premium-content {
-        padding: 40px 25px;
-    }
-
-}
-
 /* PREMIUM SATIN AL BUTONU */
 
 .premium-buy {
@@ -1180,5 +1215,118 @@ footer p {
     to {
         transform: translateX(120%);
         opacity: 0;
+    }
+}
+
+/* ========================= */
+/* LIGHTBOX (GALERİ) TASARIMI */
+/* ========================= */
+
+.lightbox-overlay {
+    display: none;
+    /* Varsayılan olarak gizli */
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.92);
+    backdrop-filter: blur(15px);
+    /* Arka planı şık bir şekilde buzlar */
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 60px;
+}
+
+#lightboxImage {
+    max-width: 100%;
+    max-height: 85vh;
+    /* Ekrana sığması için dikey sınır */
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    object-fit: contain;
+    /* Resim değiştiğinde yumuşak geçiş yapar */
+    animation: imageFadeIn 0.4s ease;
+}
+
+/* Çarpı (Kapatma) Butonu */
+.lightbox-close {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #d1d5db;
+    font-size: 45px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 3010;
+}
+
+.lightbox-close:hover {
+    color: #d6b98c;
+    transform: scale(1.1);
+}
+
+/* İleri/Geri Yön Okları */
+.lightbox-prev,
+.lightbox-next {
+    position: absolute;
+    color: #d1d5db;
+    font-size: 40px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 20px;
+    z-index: 3010;
+}
+
+.lightbox-prev {
+    left: 10px;
+}
+
+.lightbox-next {
+    right: 10px;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    color: #d6b98c;
+    transform: scale(1.1);
+}
+
+@keyframes imageFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Mobilde okların boyutunu ve boşlukları küçültüyoruz */
+@media(max-width: 700px) {
+
+    .lightbox-prev,
+    .lightbox-next {
+        font-size: 30px;
+        padding: 10px;
+    }
+
+    .lightbox-content {
+        padding: 0 40px;
+    }
+
+    .lightbox-close {
+        top: 15px;
+        right: 20px;
+        font-size: 35px;
     }
 }
