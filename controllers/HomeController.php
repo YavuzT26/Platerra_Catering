@@ -14,12 +14,12 @@ class HomeController
         // Modelimizi başlatıyoruz
         $mealModel = new MealModel($db);
 
-        $tomorrow = date('Y-m-d', strtotime('+1 day'));
-        if (!$mealModel->checkMenuExists($tomorrow)) {
-            $this->generateTomorrowMenu($mealModel, $tomorrow);
+        $today = date('Y-m-d');
+
+        if (!$mealModel->checkMenuExists($today)) {
+            $this->generateMenu($mealModel, $today);
         }
         // Arayüzde kullanacağımız verileri modelden çekiyoruz
-        $today = date('Y-m-d');
 
         $dailyMenu = $mealModel->getDailyMenu($today);
         $dailyMenuPrice = $mealModel->getDailyMenuPrice($today);
@@ -54,7 +54,7 @@ class HomeController
         // Çektiğimiz verileri require_once ile home.php de kullanılabilir hale getirdik 
         require_once 'views/home.php';
     }
-    private function generateTomorrowMenu(MealModel $mealModel, string $tomorrow)
+    private function generateMenu(MealModel $mealModel, string $date)
     {
 
 
@@ -67,12 +67,12 @@ class HomeController
             6 => 'drink_id'
         ];
 
-        $menuData = [':menu_date' => $tomorrow];
+        $menuData = [':menu_date' => $date];
 
-        $safeDays = (int)$tomorrow;
+        $safeDays = (int)$date;
 
         foreach ($categories as $categoryId => $columnName) {
-            $meal = $mealModel->getRandomMenu($categoryId, $columnName, $tomorrow, $safeDays);
+            $meal = $mealModel->getRandomMenu($categoryId, $columnName, $date, $safeDays);
 
             //Seçim Yapamadığı Senaryoda Kilitlenmemesi İçin
             if (!$meal) {
@@ -83,9 +83,9 @@ class HomeController
         }
 
         if ($mealModel->insertDailyMenu($menuData)) {
-            error_log("Platerra Catering: $tomorrow tarihi için menü kaydı başarıyla oluşturuldu.");
+            error_log("Platerra Catering: $date tarihi için menü kaydı başarıyla oluşturuldu.");
         } else {
-            error_log("Platerra Catering: $tomorrow tarihi için menü kaydı sırasında hata meydana geldi.");
+            error_log("Platerra Catering: $date tarihi için menü kaydı sırasında hata meydana geldi.");
         }
     }
 }
