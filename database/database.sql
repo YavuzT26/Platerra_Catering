@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   `item_id`   INT            NOT NULL AUTO_INCREMENT,
   `order_id`  INT            NOT NULL,
   `meal_id`   INT                NULL DEFAULT NULL,
-  `meal_name` VARCHAR(100)   NOT NULL,
+  `meal_name` VARCHAR(255)   NOT NULL,
   `price`     DECIMAL(10,2)  NOT NULL,
   PRIMARY KEY (`item_id`),
   KEY `order_id` (`order_id`),
