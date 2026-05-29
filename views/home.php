@@ -319,8 +319,8 @@
 
     <footer id="contact">
         <h2>İletişim</h2>
-        <p><i class="fa-solid fa-phone"></i> +90 555 555 55 55</p>
-        <p><i class="fa-solid fa-envelope"></i> info@platerra.com</p>
+        <p><i class="fa-solid fa-phone" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;">+90 552 817 1400</a></p>
+        <p><i class="fa-solid fa-envelope" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;"> info@platerra.com</a> </p>
     </footer>
 
 </body>
