@@ -21,318 +21,9 @@
     <title>PLATERRA - Yönetim Paneli</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="public/css/admin.css">
+    <script src="public/js/admin.js" defer> </script>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0f172a;
-            color: white;
-            padding-bottom: 60px;
-        }
-
-        .admin-nav {
-            background: #020617;
-            padding: 20px 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            font-style: italic;
-            color: white;
-            text-decoration: none;
-        }
-
-        .nav-right {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .nav-right a {
-            text-decoration: none;
-            font-weight: 600;
-            transition: 0.3s;
-            padding: 10px 20px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-view-site {
-            color: #d6b98c;
-            background: rgba(214, 185, 140, 0.1);
-            border: 1px solid rgba(214, 185, 140, 0.2);
-        }
-
-        .btn-view-site:hover {
-            background: #d6b98c;
-            color: #020617;
-        }
-
-        .btn-logout {
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .btn-logout:hover {
-            background: #ef4444;
-            color: white;
-        }
-
-        .container {
-            max-width: 1300px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        h1,
-        h2 {
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        h1 {
-            color: #d6b98c;
-            border-bottom: 1px solid rgba(214, 185, 140, 0.2);
-            padding-bottom: 15px;
-            margin-bottom: 30px;
-        }
-
-        .section-separator {
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin: 40px 0;
-        }
-
-        .alert {
-            background: rgba(214, 185, 140, 0.15);
-            border: 1px solid #d6b98c;
-            color: #d6b98c;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
-
-        .alert-error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: #020617;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 30px 25px;
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: 0.4s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            background: rgba(214, 185, 140, 0.05);
-            border-color: rgba(214, 185, 140, 0.2);
-        }
-
-        .stat-icon {
-            font-size: 35px;
-            color: #d6b98c;
-            background: rgba(214, 185, 140, 0.1);
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stat-info span {
-            display: block;
-            font-size: 14px;
-            color: #9ca3af;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-info h3 {
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .management-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            align-items: start;
-        }
-
-        @media(max-width: 1100px) {
-            .management-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background: #020617;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 35px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #d1d5db;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.04);
-            color: white;
-            font-family: inherit;
-            font-size: 15px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #d6b98c;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .form-group select option {
-            background: #020617;
-            color: white;
-            padding: 10px;
-        }
-
-        .btn {
-            width: 100%;
-            background: #d6b98c;
-            color: #020617;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(214, 185, 140, 0.2);
-        }
-
-        .btn:hover {
-            background: white;
-            transform: translateY(-2px);
-        }
-
-        .table-wrapper {
-            background: #020617;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 35px;
-            padding: 25px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 15px;
-        }
-
-        th,
-        td {
-            padding: 16px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        th {
-            color: #d6b98c;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
-
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .btn-delete {
-            color: #ef4444;
-            background: rgba(239, 68, 68, 0.1);
-            padding: 8px 14px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: 0.3s;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-delete:hover {
-            background: #ef4444;
-            color: white;
-        }
-
-        .search-container {
-            position: relative;
-            margin-top: 15px;
-            margin-bottom: 10px;
-        }
-
-        .search-container i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #d6b98c;
-            font-size: 16px;
-        }
-
-        .search-container input {
-            padding-left: 45px;
-        }
-    </style>
 </head>
 
 <body>
@@ -363,22 +54,6 @@
                 </div>
             <?php endif; ?>
         </div>
-
-        <script>
-            // Admin panelindeki bildirimleri otomatik kapatma
-            document.addEventListener("DOMContentLoaded", function() {
-                const toasts = document.querySelectorAll('.toast');
-                toasts.forEach(toast => {
-                    setTimeout(() => {
-                        toast.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-                        toast.style.opacity = "0";
-                        toast.style.transform = "translateX(120%)";
-                        setTimeout(() => toast.remove(), 500);
-                    }, 2500);
-                });
-            });
-        </script>
-
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
@@ -416,6 +91,7 @@
                         <th>Sipariş Tarihi</th>
                         <th>Sipariş İçeriği</th> <!--Yeni Sütun-->
                         <th>Toplam Ödenen Tutar</th>
+                        <th>İşlem </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -445,6 +121,26 @@
                                 <!--Sipariş içeriği-->
 
                                 <td style="font-weight:600; color: #d6b98c;"><?php echo number_format($ord['total_price'], 2, ',', '.'); ?> ₺</td>
+
+                                <!-- Sipariş İptali -->
+                                <td>
+                                    <form method="POST" action="index.php?route=admin_action" id="cancelOrderForm_<?php echo $ord['order_id']; ?>" style="display:inline;">
+                                        <!-- Arka planda işlenecek işlem adı -->
+                                        <input type="hidden" name="action" value="cancel_order">
+
+                                        <!-- İptal edilecek siparişin ID'si -->
+                                        <input type="hidden" name="cancel_order_id" value="<?php echo $ord['order_id']; ?>">
+
+                                        <!-- Güvenlik için CSRF Token -->
+                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
+                                        <!-- Onay modülünü tetikleyen buton -->
+                                        <button type="button" class="btn-delete" onclick="openConfirmModal('cancelOrderForm_<?php echo $ord['order_id']; ?>', '#<?php echo $ord['order_id']; ?> numaralı siparişi iptal etmek istediğinize emin misiniz?')">
+                                            <i class="fa-solid fa-ban"></i> İptal Et
+                                        </button>
+                                    </form>
+                                </td>
+                                <!-- Sipariş İptali -->
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -629,55 +325,6 @@
             </div>
         </div>
     </div>
-    <script>
-        function filterMeals() {
-            const input = document.getElementById('menuSearch');
-            const filter = input.value.toLowerCase().trim();
-            const table = document.getElementById('mealsTable');
-            const tr = table.getElementsByTagName('tr');
-            for (let i = 1; i < tr.length; i++) {
-                const tdMealName = tr[i].getElementsByTagName('td')[1];
-                const tdCategory = tr[i].getElementsByTagName('td')[2];
-                if (tdMealName && tdCategory) {
-                    const mealText = tdMealName.textContent || tdMealName.innerText;
-                    const catText = tdCategory.textContent || tdCategory.innerText;
-                    if (mealText.toLowerCase().indexOf(filter) > -1 || catText.toLowerCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
-        let activeFormToSubmit = null;
-
-        function openConfirmModal(formId, message) {
-            activeFormToSubmit = document.getElementById(formId);
-            document.getElementById('confirmModalText').innerText = message;
-            document.getElementById('customConfirmModal').style.display = 'flex';
-        }
-
-        function closeConfirmModal() {
-            document.getElementById('customConfirmModal').style.display = 'none';
-            activeFormToSubmit = null;
-        }
-
-        // Onay modalındaki "Evet, Sil" butonuna basıldığında formu gönderir
-        document.getElementById('confirmSuccessBtn').addEventListener('click', function() {
-            if (activeFormToSubmit) {
-                activeFormToSubmit.submit();
-            }
-        });
-
-        // Dışarı tıklayınca modalın kapanması kuralı
-        window.addEventListener('click', function(event) {
-            const confirmModal = document.getElementById('customConfirmModal');
-            if (event.target === confirmModal) {
-                closeConfirmModal();
-            }
-        });
-    </script>
 </body>
 
 </html>
