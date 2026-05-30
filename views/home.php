@@ -3,14 +3,8 @@
 /**
  * Controller tarafından View'a gönderilen değişkenlerin tanımları:
  * @var float $dailyMenuPrice
- * @var string $dailyMenu
- * @var string $corbalar
- * @var string $anaYemekler
- * @var string $zeytinyaglilar
- * @var string $mezeler
- * @var string $tatlilar
- * @var string $icecekler
- * @var array $data
+ * @var array $dailyMenu
+ * @var array $data['corbalar','anaYemekler','zeytinyaglilar','mezeler','tatlilar','icecekler']
  */
 ?>
 
@@ -53,7 +47,6 @@
         <div class="navbar">
             <div class="logo">
                 PLATERRA
-                <a href="#"></a>
             </div>
 
             <div class="nav-right">
@@ -179,8 +172,7 @@
             <p>Sıcak başlangıçlar</p>
             <ul class="sub-menu">
                 <?php foreach ($data['corbalar'] as $corba): ?>
-                    <li onclick="addToCart('<?php echo htmlspecialchars($corba['meal_name']); ?>'
-                        ,<?php echo $corba['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart(<?php echo htmlspecialchars($corba['meal_name']); ?>,<?php echo $corba['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($corba['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($corba['price']); ?> ₺</span>
                     </li>
@@ -193,7 +185,7 @@
             <p>Özel davetlere uygun ana tabaklar.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['anaYemekler'] as $yemek): ?>
-                    <li onclick="addToCart('<?php echo htmlspecialchars($yemek['meal_name']); ?>', <?php echo $yemek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart(<?php echo htmlspecialchars($yemek['meal_name']); ?>, <?php echo $yemek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($yemek['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($yemek['price']); ?> ₺</span>
                     </li>
@@ -206,7 +198,7 @@
             <p>Hafif ve sağlıklı seçenekler.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['zeytinyaglilar'] as $zeytinyagli): ?>
-                    <li onclick="addToCart('<?php echo htmlspecialchars($zeytinyagli['meal_name']); ?>', <?php echo $zeytinyagli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart(<?php echo htmlspecialchars($zeytinyagli['meal_name']); ?>, <?php echo $zeytinyagli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($zeytinyagli['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($zeytinyagli['price']); ?> ₺</span>
                     </li>
@@ -219,7 +211,7 @@
             <p>Lezzetli başlangıç alternatifleri.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['mezeler'] as $meze): ?>
-                    <li onclick="addToCart('<?php echo htmlspecialchars($meze['meal_name']); ?>', <?php echo $meze['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart(<?php echo htmlspecialchars($meze['meal_name']); ?>, <?php echo $meze['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($meze['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($meze['price']); ?> ₺</span>
                     </li>
@@ -232,7 +224,7 @@
             <p>Zarif sunumlarla final dokunuşu.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['tatlilar'] as $tatli): ?>
-                    <li onclick="addToCart('<?php echo htmlspecialchars($tatli['meal_name']); ?>', <?php echo $tatli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart(<?php echo htmlspecialchars($tatli['meal_name']); ?>, <?php echo $tatli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($tatli['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($tatli['price']); ?> ₺</span>
                     </li>
@@ -245,7 +237,7 @@
             <p>Menülere eşlik eden içecek alternatifleri.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['icecekler'] as $icecek): ?>
-                    <li onclick="addToCart('<?php echo htmlspecialchars($icecek['meal_name']); ?>', <?php echo $icecek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart(<?php echo htmlspecialchars($icecek['meal_name']); ?>, <?php echo $icecek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($icecek['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($icecek['price']); ?> ₺</span>
                     </li>
@@ -286,27 +278,34 @@
             <h2>Kayıt Ol</h2>
             <form class="auth-form" method="POST" action="index.php">
                 <input type="hidden" name="form_type" value="register">
+                <!-- Token kontrolü -->
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                 <label for="reg_fullname">Ad Soyad</label>
                 <input type="text" id="reg_full_name" name="full_name" required placeholder="Ad ve Soyad Giriniz">
                 <label for="reg_email">E-posta Adresi</label>
                 <input type="email" id="reg_email" name="email" required placeholder="ornek@mail.com">
                 <label for="reg_password">Şifre</label>
-                <input type="password" id="reg_password" name="password" required placeholder="••••••••">
+                <input type="password" id="reg_password" name="password" required minlength="8" placeholder="••••••••">
                 <button type="submit" class="btn">Hesap Oluştur</button>
             </form>
         </div>
     </div>
 
     <div class="modal-overlay" id="loginModal">
+        <?php if (isset($_GET['open_login'])): ?>style="display:flex;"<?php endif; ?>>
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('loginModal')">&times;</span>
             <h2>Giriş Yap</h2>
             <form class="auth-form" method="POST" action="index.php">
                 <input type="hidden" name="form_type" value="login">
+                <!-- Token kontrolü -->
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                 <label for="login_email">E-posta Adresi</label>
                 <input type="email" id="login_email" name="email" required placeholder="ornek@mail.com">
                 <label for="login_password">Şifre</label>
-                <input type="password" id="login_password" name="password" required placeholder="••••••••">
+                <input type="password" id="login_password" name="password" required minlength="8" placeholder="••••••••">
                 <button type="submit" class="btn">Giriş Yap</button>
                 <p style="text-align: center; margin-top: 25px; font-size: 14px; color: #d1d5db;">
                     Hesabın yok mu?
@@ -329,14 +328,6 @@
             <i class="fa-solid fa-chevron-right lightbox-next" onclick="changeImage(1)"></i>
         </div>
     </div>
-    <?php if (isset($_GET['open_login']) && $_GET['open_login'] == 1): ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // script.js içindeki modal açma fonksiyonunu çağırıyoruz
-                openModal('loginModal');
-            });
-        </script>
-    <?php endif; ?>
 </body>
 
 </html>
