@@ -8,8 +8,8 @@ class HomeController
     public function index()
     {
         // Veritabanı bağlantısını başlatma kısmı 
-        $database = new Database();
-        $db = $database->getConnection();
+
+        $db = Database::getConnection();
 
         // Modelimizi başlatıyoruz
         $mealModel = new MealModel($db);
@@ -69,10 +69,10 @@ class HomeController
 
         $menuData = [':menu_date' => $date];
 
-        $safeDays = (int)$date;
+        $lookBackDays = 1;
 
         foreach ($categories as $categoryId => $columnName) {
-            $meal = $mealModel->getRandomMenu($categoryId, $columnName, $date, $safeDays);
+            $meal = $mealModel->getRandomMenu($categoryId, $columnName, $date, $lookBackDays);
 
             //Seçim Yapamadığı Senaryoda Kilitlenmemesi İçin
             if (!$meal) {
