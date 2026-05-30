@@ -36,8 +36,7 @@ class OrderController
         $totalPrice = 0;
         $today = date('Y-m-d');
 
-        $database = new Database();
-        $db = $database->getConnection();
+        $db = Database::getConnection();
         $mealModel = new MealModel($db);
         $orderModel = new OrderModel($db);
 
