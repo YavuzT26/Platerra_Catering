@@ -21,7 +21,7 @@ class UserModel
         return $stmt->fetch();
     }
 
-    public function CreateUser(string $fullname, string $email, string $password)
+    public function createUser(string $fullname, string $email, string $password)
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
