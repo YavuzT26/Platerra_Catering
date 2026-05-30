@@ -57,6 +57,7 @@ class AuthController
     public function login()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Token kontrolü
             if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
                 $_SESSION['hata_mesaji'] = "Geçersiz istek.";
                 header("Location: index.php");
