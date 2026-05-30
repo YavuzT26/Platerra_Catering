@@ -10,16 +10,39 @@ class AdminModel
         $this->connection = $database;
     }
 
-    public function getDashboardStats()
+    public function cancelOrder(int $orderId)
     {
 
-        $stats = [];
-        $stats['total_revenue'] = $this->connection->query("SELECT SUM(total_price) FROM orders")->fetchColumn() ?? 0;
-        $stats['total_orders'] = $this->connection->query("SELECT COUNT(*) FROM orders")->fetchColumn();
-        $stats['total_meals'] = $this->connection->query("SELECT COUNT(*) FROM meals")->fetchColumn();
-        $stats['total_categories'] = $this->connection->query("SELECT COUNT(*)FROM categories")->fetchColumn();
+        try {
+            $sql = "DELETE FROM 
+                    orders
+                   WHERE order_id=:order_id";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->execute([
+                ':order_id' => $orderId
+            ]);
+            return true;
+        } catch (\PDOException $e) {
+            error_log("Sipariş silinirken bir hata meydana geldi.");
+            return false;
+        }
+    }
+    public function getDashboardStats()
+    {
+        // 4 ayrı sorgu atmak yerine 1 sorgu ile çekebiliriz 
+        //     $stats = [];
+        //     $stats['total_revenue'] = $this->connection->query("SELECT SUM(total_price) FROM orders")->fetchColumn() ?? 0;
+        //     $stats['total_orders'] = $this->connection->query("SELECT COUNT(*) FROM orders")->fetchColumn();
+        //     $stats['total_meals'] = $this->connection->query("SELECT COUNT(*) FROM meals")->fetchColumn();
+        //     $stats['total_categories'] = $this->connection->query("SELECT COUNT(*)FROM categories")->fetchColumn();
 
-        return $stats;
+        $sql = "SELECT 
+                (SELECT COALESCE(SUM(total_price),0)FROM orders) AS total_revenue,
+                (SELECT COUNT(*) FROM orders)  AS total_orders,
+                (SELECT COUNT(*) FROM meals) AS total_meals,
+                (SELECT COUNT(*) FROM categories) AS total_categories";
+
+        return $this->connection->query($sql)->fetch();
     }
 
     public function getAllOrders()
