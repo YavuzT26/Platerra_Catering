@@ -86,8 +86,16 @@ class MealModel
                 (:menu_date, :soup_id, :main_course_id, :olive_oil_id, :appetizer_id, :dessert_id, :drink_id)";
     $stmt = $this->connection->prepare($sql);
 
-    return $stmt->execute($data);
+    // Aynı güne yazılmaya çalışırsa diye try-catch içerisine alıyoruz
+    try {
+      return $stmt->execute($data);
+    } catch (\PDOException $e) {
+
+      if ($e->getCode() === '23000') return true;
+      throw $e;
+    }
   }
+
 
   //Kategoriye göre yemekleri getirme fonksiyonu saf veri döndürüyoruz 
   public function getMealsByCategory(int $category_id)
