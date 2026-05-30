@@ -10,6 +10,7 @@ class AdminModel
         $this->connection = $database;
     }
 
+    // Sipariş iptali kısmı
     public function cancelOrder(int $orderId)
     {
 
