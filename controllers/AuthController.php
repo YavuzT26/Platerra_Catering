@@ -9,8 +9,7 @@ class AuthController
 
     public function __construct()
     {
-        $database = new Database();
-        $db = $database->getConnection();
+        $db = Database::getConnection();
         $this->userModel = new UserModel($db);
     }
 
@@ -18,10 +17,28 @@ class AuthController
     public function register()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                $_SESSION['hata_mesaji'] = "Geçersiz istek.";
+                header("Location: index.php");
+                exit();
+            }
+
             $fullname = trim($_POST['full_name']);
             $email = trim($_POST['email']);
             $password = $_POST['password'];
 
+            // E-posta kontrolü
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['hata_mesaji'] = "Geçerli bir e-posta adresi giriniz.";
+                header("Location: index.php");
+                exit();
+            }
+            // Şifre uzunluk kontrolü
+            if (strlen($password) < 8) {
+                $_SESSION['hata_mesaji'] = "Şifre en az 8 karakter olmalıdır.";
+                header("Location: index.php");
+                exit();
+            }
             $existingUser = $this->userModel->getUserByEmail($email);
 
             if ($existingUser) {
@@ -29,7 +46,7 @@ class AuthController
                 header("Location: index.php");
                 exit();
             } else {
-                $this->userModel->CreateUser($fullname, $email, $password);
+                $this->userModel->createUser($fullname, $email, $password);
                 $_SESSION['basari_mesaji'] = "Hesabınız başarıyla oluşturuldu.";
                 header("Location: index.php?open_login=1");
                 exit();
@@ -40,12 +57,20 @@ class AuthController
     public function login()
     {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                $_SESSION['hata_mesaji'] = "Geçersiz istek.";
+                header("Location: index.php");
+                exit();
+            }
             $email = trim($_POST['email']);
             $password = $_POST['password'];
 
             $user = $this->userModel->getUserByEmail($email);
 
             if ($user && password_verify($password, $user['password'])) {
+                // Giriş yapıldığında eski session id'yi geçersiz kıl ve yenisini üret.
+                session_regenerate_id(true);
+
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['user_name'] = $user['full_name'];
                 $_SESSION['is_admin'] = $user['is_admin'];
