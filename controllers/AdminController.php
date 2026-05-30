@@ -20,8 +20,8 @@ class AdminController
             exit();
         }
 
-        $database = new Database();
-        $db = $database->getConnection();
+
+        $db = Database::getConnection();
         $this->adminModel = new AdminModel($db);
         $this->mealModel = new MealModel($db);
         $this->userModel = new UserModel($db);
@@ -66,6 +66,12 @@ class AdminController
             $email = trim($_POST['email']);
             $password = $_POST['password'];
 
+            if (strlen($password) < 8) {
+                $_SESSION['hata_mesaji'] = "Şifre en az 8 karakter olmalıdır.";
+                header("Location: index.php");
+                exit();
+            }
+
             if (!empty($fullName) && !empty($email) && !empty($password)) {
                 $existingUser = $this->userModel->getUserByEmail($email);
 
@@ -73,7 +79,7 @@ class AdminController
                     header("Location: index.php?route=admin&error=" . urlencode("Bu e-posta adresi zaten kullanılıyor."));
                     exit();
                 } else {
-                    $this->userModel->CreateUser($fullName, $email, $password);
+                    $this->userModel->createUser($fullName, $email, $password);
                     header("Location: index.php?route=admin&success=" . urlencode("Yeni müşteri başarıyla eklendi."));
                     exit();
                 }
@@ -103,6 +109,31 @@ class AdminController
                 header("Location: index.php?route=admin&error=" . urlencode("Silme hatası: " . $result));
             }
             exit();
+        }
+
+        // Sipariş iptal kısmı 
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'cancel_order') {
+
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                header("Location: index.php?route=admin&error=" . urlencode("Güvenlik doğrulaması başarısız oldu."));
+                exit();
+            }
+            $orderId = isset($_POST['cancel_order_id']) ? intval($_POST['cancel_order_id']) : 0;
+
+            if ($orderId > 0) {
+                $isCancelled = $this->adminModel->cancelOrder($orderId);
+
+                if ($isCancelled) {
+                    header("Location: index.php?route=admin&success=" . urlencode("#{$orderId} numaralı sipariş başarıyla iptal edildi."));
+                    exit();
+                } else {
+                    header("Location: index.php?route=admin&error=" . urlencode("Sipariş iptal edilirken sistemsel bir hata oluştu."));
+                    exit();
+                }
+            } else {
+                header("Location: index.php?route=admin&error=" . urlencode("Geçersiz sipariş numarası."));
+                exit();
+            }
         }
     }
 }
