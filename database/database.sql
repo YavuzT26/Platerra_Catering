@@ -93,6 +93,7 @@ CREATE TABLE `dailymenu` (
   KEY `appetizer_id` (`appetizer_id`),
   KEY `dessert_id` (`dessert_id`),
   KEY `drink_id` (`drink_id`),
+  UNIQUE KEY `menu_date` (`menu_date`),
   CONSTRAINT `dailymenu_ibfk_1` FOREIGN KEY (`soup_id`) REFERENCES `meals` (`meal_id`),
   CONSTRAINT `dailymenu_ibfk_2` FOREIGN KEY (`main_course_id`) REFERENCES `meals` (`meal_id`),
   CONSTRAINT `dailymenu_ibfk_3` FOREIGN KEY (`olive_oil_id`) REFERENCES `meals` (`meal_id`),
