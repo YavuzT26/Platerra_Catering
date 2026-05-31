@@ -58,3 +58,57 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 2500);
     });
 });
+
+// Admin panelindeki bildirimleri otomatik kapatma
+document.addEventListener("DOMContentLoaded", function () {
+    const toasts = document.querySelectorAll('.toast');
+    toasts.forEach(toast => {
+        // İlerleme çubuğu animasyonu ile senkronize olması için 3.5 saniye bekle
+        setTimeout(() => {
+            toast.classList.add('fade-out'); // Sağa kayarak çıkma animasyonunu başlat
+
+            // CSS çıkış animasyonu (0.5s) bittikten sonra elementi HTML'den sil
+            setTimeout(() => {
+                toast.remove();
+            }, 500);
+
+        }, 3500);
+    });
+});
+
+
+const navbar = document.querySelector('.admin-nav');
+
+function navbarBosluguAyarla() {
+    let navbarYukseklik = navbar.offsetHeight;
+    document.body.style.paddingTop = navbarYukseklik + "px";
+}
+window.addEventListener('load', navbarBosluguAyarla);
+window.addEventListener('resize', navbarBosluguAyarla);
+
+let oncekiScrollPozisyonu = window.pageYOffset;
+
+window.onscroll = function () {
+
+    let anlikScrollPozisyonu = window.pageYOffset;
+
+    let navbarYukseklik = navbar.offsetHeight;
+
+    if (oncekiScrollPozisyonu > anlikScrollPozisyonu) {
+        navbar.style.top = "0";
+    } else {
+        navbar.style.top = `-${navbarYukseklik}px`;
+    }
+    oncekiScrollPozisyonu = anlikScrollPozisyonu;
+}
+
+function yukariCik(event) {
+    // 1. Linkin varsayılan davranışını durdurur (URL'nin sonuna '#' eklenmesini engeller)
+    event.preventDefault();
+
+    // 2. Sayfanın en üstüne (top: 0) yumuşak bir şekilde (smooth) kaydırır
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
