@@ -314,14 +314,15 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="customConfirmModal" style="display:none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(8px); z-index: 9999; align-items: center; justify-content: center;">
-        <div class="modal-content" style="background: #111827; width: 90%; max-width: 400px; padding: 40px; border-radius: 35px; text-align: center; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);">
-            <i class="fa-solid fa-triangle-exclamation" style="font-size: 48px; color: #ef4444; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.3));"></i>
-            <h2 style="color: white; font-family: 'Playfair Display', serif; margin-bottom: 15px; font-size: 26px;">Emin misiniz?</h2>
-            <p id="confirmModalText" style="color: #d1d5db; font-size: 15px; margin-bottom: 30px; line-height: 1.6;"></p>
-            <div style="display: flex; gap: 15px; justify-content: center;">
-                <button type="button" class="btn" style="background: rgba(255,255,255,0.08); color: white; box-shadow: none; padding: 12px 25px; border-radius: 12px;" onclick="closeConfirmModal()">Vazgeç</button>
-                <button type="button" class="btn" id="confirmSuccessBtn" style="background: #ef4444; color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); padding: 12px 25px; border-radius: 12px;">Evet, Sil</button>
+    <div class="modal-overlay" id="customConfirmModal">
+        <div class="modal-content">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h2>Emin misiniz?</h2>
+            <p id="confirmModalText"></p>
+
+            <div class="modal-btn-group">
+                <button type="button" class="btn btn-cancel" onclick="closeConfirmModal()">Vazgeç</button>
+                <button type="button" class="btn btn-danger" id="confirmSuccessBtn">Evet, Sil</button>
             </div>
         </div>
     </div>
