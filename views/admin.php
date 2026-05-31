@@ -39,17 +39,17 @@
     <div class="container">
         <h1>Sistem Kontrol & Firma Durum Paneli</h1>
 
-        <div class="toast-container" id="toastContainer" style="position: fixed; top: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 15px;">
+        <div class="toast-container" id="toastContainer">
             <?php if (isset($_GET['success'])): ?>
-                <div class="toast success" style="min-width: 300px; background: #111827; color: white; padding: 18px 24px; border-radius: 16px; font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-left: 5px solid #d6b98c; position: relative; overflow: hidden;">
-                    <i class="fa-solid fa-circle-check" style="color: #d6b98c; font-size: 22px;"></i>
+                <div class="toast success">
+                    <i class="fa-solid fa-circle-check"></i>
                     <span><?php echo htmlspecialchars($_GET['success']); ?></span>
                 </div>
             <?php endif; ?>
 
             <?php if (isset($_GET['error'])): ?>
-                <div class="toast error" style="min-width: 300px; background: #111827; color: white; padding: 18px 24px; border-radius: 16px; font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); border-left: 5px solid #ef4444; position: relative; overflow: hidden;">
-                    <i class="fa-solid fa-triangle-exclamation" style="color: #ef4444; font-size: 22px;"></i>
+                <div class="toast error">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
                     <span><?php echo htmlspecialchars($_GET['error']); ?></span>
                 </div>
             <?php endif; ?>
@@ -325,6 +325,11 @@
             </div>
         </div>
     </div>
+    <footer style="text-align:center; padding: 40px 0;">
+        <a href="#" onclick="yukariCik(event)" style="color:#d6b98c; text-decoration:none; font-weight:600; font-size:15px; display:inline-flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-arrow-up"></i> Başlangıca Dön
+        </a>
+    </footer>
 </body>
 
 </html>
