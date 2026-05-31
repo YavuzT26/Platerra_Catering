@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
                 toast.remove();
             }, 500);
-        }, 2500);
+        }, 3500);
     });
 });
 
@@ -228,7 +228,7 @@ function showToast(message, type = 'success') {
         setTimeout(() => {
             toast.remove();
         }, 500);
-    }, 2500);
+    }, 3500);
 }
 /* ========================= */
 /* LIGHTBOX (GALERİ) SİSTEMİ */
@@ -295,3 +295,46 @@ window.addEventListener('keydown', function (event) {
         }
     }
 });
+
+const navbar = document.querySelector('.navbar');
+
+// Sayfa yüklendiğinde ve ekran boyutu her değiştiğinde çalışacak fonksiyon
+function navbarBosluguAyarla() {
+    let navbarYukseklik = navbar.offsetHeight;
+    document.body.style.paddingTop = navbarYukseklik + "px";
+}
+
+// Olay dinleyicileri (Event Listeners) ekliyoruz
+window.addEventListener('load', navbarBosluguAyarla); // Sayfa ilk yüklendiğinde
+window.addEventListener('resize', navbarBosluguAyarla); // Cihaz yan çevrildiğinde veya pencere boyutu değiştiğinde
+
+let oncekiScrollPozisyonu = window.pageYOffset;
+// Sizin CSS'inize uygun olarak id yerine class (.navbar) seçiyoruz
+
+
+window.onscroll = function () {
+    let anlikScrollPozisyonu = window.pageYOffset;
+
+    // Navbar'ın anlık yüksekliğini piksel cinsinden alıyoruz
+    let navbarYukseklik = navbar.offsetHeight;
+
+    if (oncekiScrollPozisyonu > anlikScrollPozisyonu) {
+        // Yukarı kaydırırken göster
+        navbar.style.top = "0";
+    } else {
+        // Aşağı kaydırırken tam kendi yüksekliği kadar yukarı it (gizle)
+        navbar.style.top = `-${navbarYukseklik}px`;
+    }
+
+    oncekiScrollPozisyonu = anlikScrollPozisyonu;
+}
+function yukariCik(event) {
+    // 1. Linkin varsayılan davranışını durdurur (URL'nin sonuna '#' eklenmesini engeller)
+    event.preventDefault();
+
+    // 2. Sayfanın en üstüne (top: 0) yumuşak bir şekilde (smooth) kaydırır
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
