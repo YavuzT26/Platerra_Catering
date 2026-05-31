@@ -46,7 +46,9 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                PLATERRA
+                <a href="index.php" onclick="yukariCik(event)">
+                    PLATERRA
+                </a>
             </div>
 
             <div class="nav-right">
@@ -172,7 +174,7 @@
             <p>Sıcak başlangıçlar</p>
             <ul class="sub-menu">
                 <?php foreach ($data['corbalar'] as $corba): ?>
-                    <li onclick="addToCart(<?php echo htmlspecialchars($corba['meal_name']); ?>,<?php echo $corba['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart('<?php echo htmlspecialchars($corba['meal_name']); ?>',<?php echo $corba['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($corba['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($corba['price']); ?> ₺</span>
                     </li>
@@ -185,7 +187,7 @@
             <p>Özel davetlere uygun ana tabaklar.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['anaYemekler'] as $yemek): ?>
-                    <li onclick="addToCart(<?php echo htmlspecialchars($yemek['meal_name']); ?>, <?php echo $yemek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart('<?php echo htmlspecialchars($yemek['meal_name']); ?>', <?php echo $yemek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($yemek['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($yemek['price']); ?> ₺</span>
                     </li>
@@ -198,7 +200,7 @@
             <p>Hafif ve sağlıklı seçenekler.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['zeytinyaglilar'] as $zeytinyagli): ?>
-                    <li onclick="addToCart(<?php echo htmlspecialchars($zeytinyagli['meal_name']); ?>, <?php echo $zeytinyagli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart('<?php echo htmlspecialchars($zeytinyagli['meal_name']); ?>', <?php echo $zeytinyagli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($zeytinyagli['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($zeytinyagli['price']); ?> ₺</span>
                     </li>
@@ -211,7 +213,7 @@
             <p>Lezzetli başlangıç alternatifleri.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['mezeler'] as $meze): ?>
-                    <li onclick="addToCart(<?php echo htmlspecialchars($meze['meal_name']); ?>, <?php echo $meze['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart('<?php echo htmlspecialchars($meze['meal_name']); ?>', <?php echo $meze['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($meze['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($meze['price']); ?> ₺</span>
                     </li>
@@ -224,7 +226,7 @@
             <p>Zarif sunumlarla final dokunuşu.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['tatlilar'] as $tatli): ?>
-                    <li onclick="addToCart(<?php echo htmlspecialchars($tatli['meal_name']); ?>, <?php echo $tatli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart('<?php echo htmlspecialchars($tatli['meal_name']); ?>', <?php echo $tatli['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($tatli['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($tatli['price']); ?> ₺</span>
                     </li>
@@ -237,7 +239,7 @@
             <p>Menülere eşlik eden içecek alternatifleri.</p>
             <ul class="sub-menu">
                 <?php foreach ($data['icecekler'] as $icecek): ?>
-                    <li onclick="addToCart(<?php echo htmlspecialchars($icecek['meal_name']); ?>, <?php echo $icecek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
+                    <li onclick="addToCart('<?php echo htmlspecialchars($icecek['meal_name']); ?>', <?php echo $icecek['price']; ?>)" style="display:flex; justify-content:space-between; align-items:center;">
                         <span><?php echo htmlspecialchars($icecek['meal_name']); ?></span>
                         <span style="font-size:14px; opacity:0.8;"><?php echo round($icecek['price']); ?> ₺</span>
                     </li>
@@ -292,8 +294,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="loginModal">
-        <?php if (isset($_GET['open_login'])): ?>style="display:flex;"<?php endif; ?>>
+    <div class="modal-overlay" id="loginModal" <?php if (isset($_GET['open_login'])): ?>style="display:flex;" <?php endif; ?>>
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('loginModal')">&times;</span>
             <h2>Giriş Yap</h2>
@@ -317,7 +318,7 @@
 
     <footer id="contact">
         <h2>İletişim</h2>
-        <p><i class="fa-solid fa-phone" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;">+90 552 817 1400</a></p>
+        <p><i class="fa-solid fa-phone" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;"> +90 552 817 1400</a></p>
         <p><i class="fa-solid fa-envelope" style="color:rgba(74, 79, 220, 0.82)"></i><a href="#" style="color:#d6b98c;"> info@platerra.com</a> </p>
     </footer>
     <div id="lightboxModal" class="lightbox-overlay">
