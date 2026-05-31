@@ -9,15 +9,26 @@ body {
     background: #0f172a;
     color: white;
     padding-bottom: 60px;
+    padding-top: 100px;
+    /* YENİ: Navbar yüksekliği kadar boşluk */
 }
 
 .admin-nav {
-    background: #020617;
-    padding: 20px 60px;
+    background: rgba(2, 6, 23, 0.90);
+    backdrop-filter: blur(12px);
+    padding: 25px 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+
+    /* YENİ EKLENEN KISIM: Kayma animasyonunun süresi ve yumuşaklığı */
+    transition: top 0.3s ease-in-out;
 }
 
 .logo {
@@ -117,7 +128,8 @@ h1 {
 }
 
 .stat-card {
-    background: #020617;
+    /* Düz siyah yerine lacivertten siyaha hafif renk geçişi */
+    background: linear-gradient(145deg, rgba(2, 6, 23, 1), rgba(15, 23, 42, 0.6));
     border: 1px solid rgba(255, 255, 255, 0.05);
     padding: 30px 25px;
     border-radius: 25px;
@@ -125,12 +137,17 @@ h1 {
     align-items: center;
     gap: 20px;
     transition: 0.4s;
+    /* Derinlik katan temel gölge */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    background: rgba(214, 185, 140, 0.05);
-    border-color: rgba(214, 185, 140, 0.2);
+    /* Üzerine gelince PLATERRA altın rengi (Gold) ile hafif bir parlama */
+    background: linear-gradient(145deg, rgba(2, 6, 23, 1), rgba(214, 185, 140, 0.08));
+    border-color: rgba(214, 185, 140, 0.3);
+    /* Altın rengi gölge yansıması */
+    box-shadow: 0 15px 40px rgba(214, 185, 140, 0.1);
 }
 
 .stat-icon {
@@ -171,14 +188,16 @@ h1 {
     .management-grid {
         grid-template-columns: 1fr;
     }
+
+    .admin-nav,
+    .nav-right {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        gap: 20px;
+    }
 }
 
-.card {
-    background: #020617;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 30px;
-    border-radius: 35px;
-}
+
 
 .form-group {
     margin-bottom: 20px;
@@ -219,29 +238,57 @@ h1 {
 
 .btn {
     width: 100%;
-    background: #d6b98c;
-    color: #020617;
+    /* Müşteri tarafındaki Premium gradient geçişi */
+    background: linear-gradient(135deg, #d6b98c, #f5deb3);
+    color: #111827;
     border: none;
     padding: 15px;
     border-radius: 12px;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 4px 15px rgba(214, 185, 140, 0.2);
+    transition: 0.4s;
+    /* Soft bir buton gölgesi */
+    box-shadow: 0 4px 15px rgba(214, 185, 140, 0.25);
 }
 
 .btn:hover {
-    background: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    /* Üzerine gelince parlayan gradient efekti */
+    background: linear-gradient(135deg, #ffffff, #d6b98c);
+    box-shadow: 0 15px 30px rgba(214, 185, 140, 0.35);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    /* Üzerine gelince parlayan gradient efekti */
+    background: linear-gradient(135deg, #ffffff, #d6b98c);
+    box-shadow: 0 15px 30px rgba(214, 185, 140, 0.35);
+}
+
+.card,
+.table-wrapper {
+    background: linear-gradient(145deg, rgba(2, 6, 23, 0.9), rgba(15, 23, 42, 0.5));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 35px;
+    /* Panellere dış gölge ekliyoruz */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    transition: 0.4s;
+}
+
+.card {
+    padding: 30px;
 }
 
 .table-wrapper {
-    background: #020617;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 35px;
     padding: 25px;
     overflow-x: auto;
+}
+
+.card:hover,
+.table-wrapper:hover {
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 table {
@@ -265,8 +312,26 @@ th {
     letter-spacing: 1px;
 }
 
-tr:hover td {
-    background: rgba(255, 255, 255, 0.02);
+/* Tablo satırlarına genel bir geçiş süresi ekliyoruz */
+tbody tr td {
+    transition: all 0.3s ease;
+}
+
+/* İlk sütunun soluna şeffaf bir kenarlık ekliyoruz ki sonradan renklenebilsin */
+tbody tr td:first-child {
+    border-left: 4px solid transparent;
+}
+
+/* Fare ile satırın üzerine gelindiğinde (Hover durumu) */
+tbody tr:hover td {
+    background: linear-gradient(90deg, rgba(214, 185, 140, 0.08), transparent);
+}
+
+/* Hover durumunda sadece ilk sütunun sol kenarlığı altın rengi olsun */
+tbody tr:hover td:first-child {
+    border-left: 4px solid #d6b98c;
+    /* ID numarası gibi kısımları daha belirgin yapmak için metni aydınlatıyoruz */
+    color: white !important;
 }
 
 .btn-delete {
@@ -306,4 +371,173 @@ tr:hover td {
 
 .search-container input {
     padding-left: 45px;
+}
+
+/* ========================= */
+/* ÖZEL SCROLLBAR TASARIMI   */
+/* ========================= */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    /* Yatay kaydırma çubuğu için */
+}
+
+::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(214, 185, 140, 0.3);
+    /* PLATERRA Gold renginin soft hali */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(214, 185, 140, 0.6);
+}
+
+/* ========================= */
+/* ŞIK TOAST BİLDİRİMLERİ    */
+/* ========================= */
+
+.toast-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.toast {
+    min-width: 300px;
+    background: #111827;
+    color: white;
+    padding: 18px 24px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 5px solid transparent;
+
+    position: relative;
+    overflow: hidden;
+    /* İlerleme çubuğunun taşmasını engeller */
+
+    /* Sağdan kayarak gelme animasyonu */
+    animation: slideInRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Başarı (Success) Teması */
+.toast.success {
+    border-left-color: #d6b98c;
+}
+
+.toast.success i {
+    color: #d6b98c;
+    font-size: 22px;
+}
+
+.toast.success::after {
+    background: #d6b98c;
+}
+
+/* Hata (Error) Teması */
+.toast.error {
+    border-left-color: #ef4444;
+}
+
+.toast.error i {
+    color: #ef4444;
+    font-size: 22px;
+}
+
+.toast.error::after {
+    background: #ef4444;
+}
+
+/* Alt kısımdaki zaman/ilerleme çubuğu (Progress Bar) */
+.toast::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    animation: toastProgress 3.5s linear forwards;
+}
+
+/* Kaybolma (Çıkış) Sınıfı */
+.toast.fade-out {
+    animation: fadeOutRight 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Keyframes (Animasyonların Matematikleri) */
+@keyframes toastProgress {
+    100% {
+        width: 0;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+/* ========================= */
+/* ARKA PLAN IŞIK EFEKTLERİ  */
+/* ========================= */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(150px);
+    z-index: -1;
+    /* Tüm içeriklerin arkasında kalmasını sağlar */
+    pointer-events: none;
+    /* Tıklamaları engellememesi için zorunlu */
+}
+
+/* Sol üstten vuran hafif altın/krem rengi parlama */
+body::before {
+    top: -200px;
+    left: -200px;
+    width: 600px;
+    height: 600px;
+    background: rgba(214, 185, 140, 0.05);
+}
+
+/* Sağ alttan vuran daha koyu bir mavi/mor parlama (derinlik katar) */
+body::after {
+    bottom: -200px;
+    right: -200px;
+    width: 500px;
+    height: 500px;
+    background: rgba(59, 130, 246, 0.04);
 }
