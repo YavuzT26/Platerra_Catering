@@ -1374,3 +1374,7 @@ footer p {
         font-size: 35px;
     }
 }
+
+#contact a {
+    text-decoration: none !important;
+}
