@@ -91,7 +91,7 @@ class MealModel
       return $stmt->execute($data);
     } catch (\PDOException $e) {
 
-      if ($e->getCode() === '23000') return true;
+      if ($e->getCode() === '23000' && isset($e->errorInfo[1]) && $e->errorInfo[1] === 1062) return true;
       throw $e;
     }
   }
