@@ -541,3 +541,79 @@ body::after {
     height: 500px;
     background: rgba(59, 130, 246, 0.04);
 }
+
+/* Modal Arka Planı (Overlay) */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal Kutusu */
+.modal-content {
+    background: #111827;
+    width: 90%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 35px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Uyarı İkonu */
+.modal-content .fa-triangle-exclamation {
+    font-size: 48px;
+    color: #ef4444;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.3));
+}
+
+/* Başlık */
+.modal-content h2 {
+    color: white;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 15px;
+    font-size: 26px;
+}
+
+/* Açıklama Metni */
+.modal-content p {
+    color: #d1d5db;
+    font-size: 15px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* Buton Konteyneri */
+.modal-btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* Ortak Buton Özellikleri */
+.modal-btn-group .btn {
+    padding: 12px 25px;
+    border-radius: 12px;
+    color: white;
+    transition: all 0.2s ease;
+    /* Küçük bir geçiş efekti eklendi */
+}
+
+/* Vazgeç Butonu */
+.btn-cancel {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+}
+
+/* Evet, Sil Butonu */
+.btn-danger {
+    background: #ef4444;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
