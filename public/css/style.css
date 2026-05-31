@@ -610,6 +610,18 @@ footer p {
         min-height: 300px;
     }
 
+    #gununMenusu .premium-content {
+        grid-template-columns: 1fr !important;
+        /* Yan yana durmayı iptal eder, alt alta alır */
+        padding: 40px !important;
+        gap: 30px !important;
+    }
+
+    #gununMenusu .premium-left h2 {
+        font-size: 42px !important;
+        /* Başlığı küçültür */
+    }
+
     .dropdown-menu {
         display: none;
         position: absolute;
@@ -652,6 +664,32 @@ footer p {
     .section-title {
         font-size: 32px;
         /* Başlıklar telefonda çok büyük durmasın */
+    }
+
+    #gununMenusu {
+        margin: 40px 20px !important;
+        /* Ekrana tam yapışmasın diye sağdan soldan boşluk */
+        border-radius: 25px !important;
+    }
+
+    #gununMenusu .premium-content {
+        padding: 25px !important;
+    }
+
+    #gununMenusu .premium-left h2 {
+        font-size: 32px !important;
+        /* Telefonda başlığı tam sığdırır */
+        line-height: 1.2 !important;
+    }
+
+    #gununMenusu .premium-right {
+        grid-template-columns: 1fr !important;
+        /* 6 adet yemeği alt alta tek sıra dizer */
+        gap: 15px !important;
+    }
+
+    #gununMenusu .premium-item {
+        padding: 15px !important;
     }
 }
 
