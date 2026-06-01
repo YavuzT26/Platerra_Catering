@@ -61,12 +61,12 @@ class OrderController
                     ];
                     $validMeals = array_filter($meals);
                     if (!empty($validMeals)) {
-                        $menuDetails = "\n-" . implode(', ', $validMeals);
+                        $menuDetails = "\n" . implode(",\n", $validMeals);
                     }
                 }
                 $items[] = [
                     'meal_id' => null,
-                    'meal_name' => 'Şefin Günlük Menüsü' . $menuDetails,
+                    'meal_name' => "\nŞefin Günlük Menüsü " . $menuDetails,
                     'price' => $price
                 ];
             } else {
