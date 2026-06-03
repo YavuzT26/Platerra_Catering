@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
             toast.style.opacity = "0";
             toast.style.transform = "translateX(120%)";
             setTimeout(() => toast.remove(), 500);
-        }, 2500);
+        }, 3500);
     });
 });
 
